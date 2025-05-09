@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Header Component -->
+    <template id="rifas_header" name="Rifas Header">
+        <header class="header">
+            <div class="header__container">
+                <div class="header__logo">
+                    <a href="/">
+                        WebbyRifas
+                    </a>
+                </div>
+            </div>
+        </header>
+    </template>
+
+    <!-- Footer Component -->
+    <template id="rifas_footer" name="Rifas Footer">
+        <footer class="footer">
+            <div class="footer__container">
+                <p class="footer__text">WebbyRifas <t t-esc="datetime.datetime.now().year"/> - Todos los derechos reservados</p>
+                <nav class="footer__nav">
+                    <a href="#">Términos</a> | <a href="#">Privacidad</a>
+                </nav>
+            </div>
+        </footer>
+    </template>
+
+    <!-- Payment Methods Component -->
+    <template id="rifas_payment_methods" name="Rifas Payment Methods">
+        <section class="payment">
+            <h2 class="payment__title">Formas de Pago</h2>
+            <div class="payment__methods">
+                <t t-foreach="payments_method" t-as="method">
+                    <span class="payment__method">
+                        <t t-esc="method.name"/>
+                    </span>
+                </t>
+            </div>
+        </section>
+    </template>
+    
+    <!-- Gallery Component -->
+    <template id="rifas_gallery" name="Rifas Gallery">
+        <t t-if="rifa.image_ids">
+            <section class="gallery">
+                <div class="gallery__container">
+                    <t t-foreach="rifa.image_ids" t-as="image">
+                        <div class="gallery__item">
+                            <img t-att-src="image.image_url" alt="Imagen de la rifa"/>
+                        </div>
+                    </t>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <!-- FAQ Component -->
+    <template id="rifas_faq" name="Rifas FAQ">
+        <section class="faq">
+            <h2 class="faq__title">Preguntas Frecuentes</h2>
+            <div class="faq__list">
+                <details class="faq__item">
+                    <summary>¿Quién debería usar esta app?</summary>
+                    <p>Respuesta...</p>
+                </details>
+                <details class="faq__item">
+                    <summary>¿Qué incluye mi suscripción?</summary>
+                    <p>Respuesta...</p>
+                </details>
+                <details class="faq__item">
+                    <summary>¿Cómo me pago?</summary>
+                    <p>Respuesta...</p>
+                </details>
+                <details class="faq__item">
+                    <summary>¿Es segura mi información?</summary>
+                    <p>Respuesta...</p>
+                </details>
+                <details class="faq__item">
+                    <summary>¿Cómo me contacto?</summary>
+                    <p>Respuesta...</p>
+                </details>
+            </div>
+            <t t-if="rifa">
+                <a t-att-href="rifa.slug_url" class="button">Comprar Ticket</a>
+            </t>
+        </section>
+    </template>
+    
+    <!-- Base Template with standalone structure -->
+    <template id="rifas_layout" name="Rifas Layout">
+        <html lang="es">
+            <head>
+                <meta charset="UTF-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <title><t t-esc="title or 'WebbyRifas'"/></title>
+                <!-- Load global.css -->
+                <link rel="stylesheet" href="/rifas/static/css/global.css"/>
+            </head>
+            <body>
+                <t t-call="rifas.rifas_header"/>
+                <main>
+                    <t t-raw="0"/>
+                </main>
+                <t t-call="rifas.rifas_footer"/>
+            </body>
+        </html>
+    </template>
+</odoo>

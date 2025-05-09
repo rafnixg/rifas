@@ -1,29 +1,43 @@
 {
-    "name": "Rifas Management",
-    "version": "18.0.1.0.0",
-    "summary": "Manage raffles and tickets",
+    "name": "Rifas",
+    "version": "18.0.1.1.0",
+    "summary": "Gestión de rifas para vertical de sorteos",
     "description": """
-Rifas Management
-===============
-This module allows to manage raffles, tickets sales and winners.
+        Módulo para la gestión de rifas, sorteos y boletos en Odoo 18.0.
     """,
     "author": "Rafnix Guzman",
     "website": "https://rafnixg.com",
     "category": "Website",
     "depends": [
         "base",
+        # "website",
+        # "mail"
     ],
     "data": [
         "security/ir.model.access.csv",
-        "data/ir.sequence.xml",
+        "views/payment_views.xml",
         "views/raffle_views.xml",
         "views/sale_order_views.xml",
-        "views/payment_views.xml",
         "views/ticket_views.xml",
-        "wizards/raffle_winner_views.xml"
+        "views/website/components.xml",
+        "views/website/home_template.xml",
+        "views/website/raffle_template.xml", 
+        "views/website/checkout_template.xml",
+        "views/website/confirmation_template.xml",
+        "data/mail_templates.xml",
+        "data/ir.sequence.xml",
     ],
     "installable": True,
     "application": True,
-    "auto_install": False,
     "license": "LGPL-3",
+    "assets": {
+        "web.assets_frontend": [
+            "rifas/static/css/global.css",
+            "rifas/static/css/home.css",
+            "rifas/static/css/raffle.css",
+            "rifas/static/css/checkout.css",
+            "rifas/static/js/checkout.js",
+            "rifas/static/js/raffle.js"
+        ]
+    },
 }

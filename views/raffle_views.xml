@@ -9,7 +9,8 @@
                 <field name="name" string="Rifa"/>
                 <field name="asignation_type" string="Tipo de asignación"/>
                 <field name="state" string="Estado" widget="badge" decoration-success="state == 'finished'" decoration-danger="state == 'cancel'" decoration-info="state == 'publish'" decoration-warning="state == 'draft'"/>
-                <field name="qty_min" string="Número mínimo de boletos"/>
+                <field name="ticket_sold" string="Vendidos"/>
+                <field name="ticket_available" string="Disponibles"/>
                 <field name="date_end" string="Fecha de finalización" widget="remaining_days"/>
             </list>
         </field>

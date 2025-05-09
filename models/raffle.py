@@ -1,21 +1,59 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+import re
+
+def _slugify(name):
+    """
+    This method generates a slug from the given name.
+    """
+    name = re.sub(r'[^a-zA-Z0-9\s-]', '', name)  # Remove special characters
+    name = re.sub(r'\s+', '-', name)  # Replace spaces with hyphens
+    name = name.strip('-') # Remove leading/trailing hyphens
+    return name.lower()  # Convert to lowercase
+
+def _remove_html_tags(html):
+    """
+    This method removes HTML tags from the given string.
+    """
+    clean = re.compile('<.*?>')
+    return re.sub(clean, '', html)
+
+def _get_html_description_default():
+    """
+    This method returns the default HTML description for the raffle.
+    """
+    return """
+        <h1>🎉 ¡Rifa {tu rifa}! 🎉</h1>
+
+        <p> ¡No te pierdas la oportunidad de ganar increíbles premios y apoyar una buena causa! </p>
+        <ul>
+            <li>🗓 Fecha de la Rifa: [Fecha de la rifa]</li>
+            <li>📍 Lugar: [Ubicación del evento]</li>
+            <li>⏰ Hora: [Hora del evento]</li>
+        </ul>
+
+        <p><b>Premios:<b></p>
+        <ul>
+        <li>🏆 Primer premio: [Descripción del primer premio]</li>
+        <li>🥈 Segundo premio: [Descripción del segundo premio]</li>
+        <li>🥉 Tercer premio: [Descripción del tercer premio]</li>
+        </ul>
+        <p>¡No te lo pierdas! Compra tus boletos ahora y participa en esta emocionante rifa. ¡Buena suerte!</p>
+    """
+
 
 class RifaImage(models.Model):
     _name = 'rifas.image'
     _description = 'Imagen de Rifa'
 
-    image = fields.Binary(string='Imagen')
+    image = fields.Binary(string='Imagen', required=True)
     image_url = fields.Char(string='URL de la Imagen', compute='_compute_image_url', store=True)
     rifa_id = fields.Many2one('rifas.raffle', string='Rifa')
 
     @api.depends('image')
     def _compute_image_url(self):
         for record in self:
-            if record.image:
-                record.image_url = f"data:image/png;base64,{record.image.decode('utf-8')}"
-            else:
-                record.image_url = False
+            record.image_url = f"/rifas/image/{record.id}"
 
 
 class Rifa(models.Model):
@@ -23,8 +61,10 @@ class Rifa(models.Model):
     _description = 'Rifa'
 
     name = fields.Char(required=True)
-    description = fields.Html(string='Descripción')
+    description = fields.Html(string='Descripción', default=_get_html_description_default())
+    description_short = fields.Text(string='Descripción Corta', compute='_compute_description_short', store=True)
     image_feature = fields.Binary(string='Imagen Principal')
+    image_feature_url = fields.Char(string='URL de la Imagen Principal', compute='_compute_image_feature_url', store=True)
     image_ids = fields.One2many('rifas.image', 'rifa_id', string='Imágenes')
     date_end = fields.Date()
     ticket_ids = fields.One2many('rifas.ticket', 'rifa_id', string='Boletos')
@@ -47,7 +87,46 @@ class Rifa(models.Model):
     ], default='draft', required=True)
     winning_number = fields.Integer(string='Número Ganador', help='Número ganador de la rifa')
     winning_ticket_id = fields.Many2one('rifas.ticket', string='Boleto Ganador', help='Boleto ganador de la rifa')
+    slug = fields.Char(string='Slug', compute='_compute_slug', store=True)
+    slug_url = fields.Char(string='URL', compute='_compute_slug_url', store=True)
+    
+    @api.depends('name')
+    def _compute_slug(self):
+        """
+        This method computes the slug for the raffle based on its name.
+        """
+        for record in self:
+            record.slug = _slugify(record.name)
 
+    @api.depends('slug')
+    def _compute_slug_url(self):
+        """
+        This method computes the URL for the raffle based on its slug.
+        """
+        for record in self:
+            record.slug_url = f"/rifas/{record.slug}"
+
+    @api.depends('image_feature')
+    def _compute_image_feature_url(self):
+        """
+        This method computes the URL for the main image of the raffle.
+        """
+        for record in self:
+            record.image_feature_url = f"/rifas/image_feature/{record.id}"
+
+    @api.depends('description')
+    def _compute_description_short(self):
+        """
+        This method computes a short description for the raffle.
+        It limits the description to 100 characters.
+        """
+        for record in self:
+            if record.description:
+                desc = _remove_html_tags(record.description)
+                desc = desc.replace('\n', ' ')
+                record.description_short = desc[:140] + '...' if len(desc) > 100 else desc
+            else:
+                record.description_short = ''
 
     @api.depends('ticket_ids')
     def _compute_ticket_sold(self):
@@ -87,8 +166,6 @@ class Rifa(models.Model):
             raise ValidationError("La rifa no tiene fecha de finalización.")
         if not self.ticket_max:
             raise ValidationError("La rifa no tiene cantidad máxima de boletos.")
-        if not self.ticket_sold:
-            raise ValidationError("La rifa no tiene cantidad de boletos vendidos.")
         self.state = 'publish'
         return True
 

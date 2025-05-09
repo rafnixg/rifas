@@ -1,0 +1,126 @@
+/* Global styles shared between all rifas pages */
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Utilidades */
+.button {
+    background-color: #0056ff;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 1rem;
+    display: inline-block;
+    text-decoration: none;
+}
+
+/* Header */
+.header {
+    background: white;
+    padding: 1rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.header__container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header__logo {
+    font-weight: bold;
+}
+
+/* Gallery */
+.gallery__container {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: white;
+}
+
+.gallery__item {
+    width: auto;
+    height: 140px;
+}
+
+.gallery__item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+
+/* Payment */
+.payment {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.payment__methods {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.payment__method {
+    background: #eee;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+}
+
+/* FAQ */
+.faq {
+    background: #eaf2ff;
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+.faq__list {
+    max-width: 600px;
+    margin: 1rem auto;
+    text-align: left;
+}
+
+.faq__item {
+    margin-bottom: 1rem;
+}
+
+.faq__item summary {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.faq__item p {
+    padding: 0.5rem 1rem;
+}
+
+/* Footer */
+.footer {
+    background: #333;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+}
+
+.footer__nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 0.5rem;
+}

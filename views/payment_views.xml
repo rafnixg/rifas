@@ -1,9 +1,6 @@
 <odoo>
     <data>
-    
-        
-    
-    
+
     <record id="view_payment_tree" model="ir.ui.view">
         <field name="name">payment.tree</field>
         <field name="model">rifas.payment</field>

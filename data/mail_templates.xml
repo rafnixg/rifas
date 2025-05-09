@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- The email template reference will be added once the model is properly declared -->
+        <!-- Placeholder for email template -->
+    </data>
+</odoo>

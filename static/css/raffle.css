@@ -1,0 +1,101 @@
+/* Styles specific to the raffle detail page */
+
+/* Hero */
+.hero {
+    padding: 2rem;
+    background: #eef1f5;
+    text-align: center;
+}
+
+.hero__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hero__image {
+    width: 200px;
+    height: 200px;
+    background: #ccc;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+}
+
+.hero__feature_image img {   
+    width: 100%;
+}
+
+.hero__price {
+    color: #0056ff;
+    font-weight: bold;
+    display: block;
+    margin-top: 2rem;
+}
+
+.hero__title {
+    font-size: 1.8rem;
+    margin: 0.5rem 0;
+}
+
+.hero__list {
+    list-style: disc;
+    padding-left: 1.2rem;
+    text-align: left;
+}
+
+/* Ticket Selector */
+.ticket-selector {
+    background: white;
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+.ticket-selector__stats {
+    display: flex;
+    justify-content: space-between;
+    max-width: 600px;
+    margin: 0 auto 1rem auto;
+}
+
+.ticket-selector__title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.ticket-selector__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+    gap: 0.5rem;
+    max-height: 300px;
+    max-width: 600px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+
+.ticket-selector__number {
+    padding: 0.5rem;
+    background: #eee;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.ticket-selector__number:hover {
+    background-color: #d0e3ff;
+}
+
+.ticket-selector__number.selected {
+    background-color: #0056ff;
+    color: white;
+    border-color: #0040c0;
+}
+
+.ticket-selector__summary {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1rem;
+}

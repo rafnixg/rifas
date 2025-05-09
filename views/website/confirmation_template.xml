@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="rifas_order_confirmation" name="Order Confirmation">
+        <t t-call="rifas.rifas_layout">
+            <t t-set="title">Confirmación de Orden - WebbyRifas</t>
+            
+            <!-- Include confirmation-specific CSS -->
+            <t t-set-slot="head">
+                <link rel="stylesheet" href="/rifas/static/css/checkout.css"/>
+            </t>
+            
+            <div class="checkout-container">
+                <div class="checkout-header">
+                    <h1>¡Gracias por tu compra!</h1>
+                </div>
+                
+                <div class="confirmation-content">
+                    <div class="alert alert-success">
+                        <p>Tu orden <strong>#<t t-esc="order.name"/></strong> ha sido registrada correctamente.</p>
+                        <p>Te hemos enviado un correo electrónico con los detalles de tu compra.</p>
+                    </div>
+                    
+                    <div class="order-summary">
+                        <h3>Resumen de la Orden</h3>
+                        
+                        <div class="order-details">
+                            <p><strong>Rifa:</strong> <t t-esc="raffle.name"/></p>
+                            <p><strong>Fecha:</strong> <t t-esc="order.create_date" t-options="{'widget': 'datetime'}"/></p>
+                            <p><strong>Estado:</strong> <span class="badge text-bg-warning">Pendiente de Pago</span></p>
+                        </div>
+                        
+                        <div class="ticket-summary">
+                            <h4>Tus Números</h4>
+                            <div class="ticket-numbers">
+                                <t t-foreach="tickets" t-as="ticket">
+                                    <span class="ticket-number"><t t-esc="ticket.number"/></span>
+                                </t>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-instructions">
+                            <h4>Instrucciones de Pago</h4>
+                            <t t-if="order.payment_method_id">
+                                <div class="payment-method">
+                                    <p><strong>Método de Pago:</strong> <t t-esc="order.payment_method_id.name"/></p>
+                                    <div class="payment-details">
+                                        <t t-if="order.payment_method_id.description">
+                                            <div t-esc="order.payment_method_id.description"/>
+                                        </t>
+                                        <t t-if="order.payment_method_id.bank_account_number">
+                                            <div class="account-info">
+                                                <p><strong>Cuenta bancaria:</strong> <span t-esc="order.payment_method_id.bank_account_number"/></p>
+                                                <p><strong>Titular:</strong> <span t-esc="order.payment_method_id.bank_account_owner"/></p>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+                            </t>
+                            <p class="payment-note">Por favor realiza tu pago en las próximas 24 horas para confirmar tu participación.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="next-steps text-center mt-4">
+                        <a href="/rifas" class="button">Volver al inicio</a>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    
+    <!-- Template shown when selected tickets become unavailable -->
+    <template id="rifas_tickets_unavailable" name="Tickets Unavailable">
+        <t t-call="rifas.rifas_layout">
+            <t t-set="title">Tickets No Disponibles - WebbyRifas</t>
+            
+            <div class="checkout-container">
+                <div class="checkout-header">
+                    <h1>Tickets No Disponibles</h1>
+                </div>
+                
+                <div class="alert alert-danger">
+                    <p>Lo sentimos, los siguientes números ya no están disponibles:</p>
+                    <ul>
+                        <t t-foreach="unavailable_tickets" t-as="ticket">
+                            <li><t t-esc="ticket.number"/></li>
+                        </t>
+                    </ul>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a t-att-href="'/raffle/%s' % raffle.id" class="button">Seleccionar otros números</a>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

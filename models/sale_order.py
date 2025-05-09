@@ -12,7 +12,7 @@ class SaleOrder(models.Model):
     )
     amount = fields.Float(string='Monto Total', compute='_compute_amount', store=True)
     email = fields.Char(string='Email', related='client_id.email', store=True)
-    full_name = fields.Char(string='Cliente', related='client_id.name', store=True)
+    full_name = fields.Char(string='Nombre del cliente', related='client_id.name', store=True)
     state = fields.Selection([
         ('review', 'En revisión'),
         ('done', 'Completado'),
