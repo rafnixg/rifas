@@ -1,0 +1,76 @@
+<odoo>
+    <record id="view_sale_order_tree" model="ir.ui.view">
+        <field name="name">sale.order.tree</field>
+        <field name="model">rifas.sale_order</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="email"/>
+                <field name="amount" string="Monto"/>
+                <field name="state" widget="badge"/>
+                <field name="create_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sale_order_form" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">rifas.sale_order</field>
+        <field name="arch" type="xml">
+            <form string="Ordenes de Venta">
+                <header>
+                    <button name="action_view_payment" type="object" string="Ver Pago" class="oe_highlight" invisible="not payment_id"/>
+                    <button name="action_view_payment" type="object" string="Crear Pago" class="oe_highlight" invisible="payment_id"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title mb24">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Datos del Cliente">
+                            <field name="client_id" readonly="state in ('done','cancel')"/>
+                            <field name="full_name" invisible="1"/>
+                            <field name="email"/>
+                        </group>
+                        <group string="Detalles de la Orden">
+                            <field name="rifa_id"  readonly="state in ('done','cancel')"/>
+                            <field name="create_date"/>
+                            <field name="amount" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Tickets">
+                            <field name="ticket_ids" context="{'default_client_id': client_id, 'default_sale_order_id': id, 'default_rifa_id': rifa_id}"  readonly="state in ('done','cancel')">
+                                <list>
+                                    <field name="number" string="Número de Ticket"/>
+                                    <field name="state" string="Estado" widget="badge"/>
+                                </list>
+                                <form>
+                                    <sheet>
+                                        <group>
+                                            <field name="number" string="Número de Ticket"/>
+                                            <field name="rifa_id" string="Rifa" invisible="1"/>
+                                            <field name="client_id" string="Cliente" invisible="1"/>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sale_order" model="ir.actions.act_window">
+        <field name="name">Órdenes de Venta</field>
+        <field name="res_model">rifas.sale_order</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_sale_order" name="Órdenes de Venta" parent="menu_rifas_rifa" action="action_sale_order" sequence="40"/>
+</odoo>

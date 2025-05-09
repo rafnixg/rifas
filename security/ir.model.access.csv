@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rifas_rifa,access.rifas.raffle,model_rifas_raffle,base.group_user,1,1,1,1
+access_rifas_ticket,access.rifas.ticket,model_rifas_ticket,base.group_user,1,1,1,1
+access_rifas_image,access.rifas.image,model_rifas_image,base.group_user,1,1,1,1
+access_rifas_payment,access.rifas.payment,model_rifas_payment,base.group_user,1,1,1,1
+access_rifas_sale_order,access.rifas.sale_order,model_rifas_sale_order,base.group_user,1,1,1,1
+access_rifas_payment_method,access.rifas.payment.method,model_rifas_payment_method,base.group_user,1,1,1,1
+access_rifas_client,access.rifas.client,model_rifas_client,base.group_user,1,1,1,1

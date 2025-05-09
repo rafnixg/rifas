@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form view for the winner selection wizard -->
+    <record id="view_rifas_winner_wizard_form" model="ir.ui.view">
+        <field name="name">rifas.winner.wizard.form</field>
+        <field name="model">rifas.winner.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Select Raffle Winner">
+                <group>
+                    <field name="raffle_id" options="{'no_create': True, 'no_open': True}"/>
+                    <field name="winning_number"/>
+                </group>
+                <footer>
+                    <button name="action_confirm_winner" string="Confirm Winner" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action to open the wizard -->
+    <record id="action_rifas_winner_wizard" model="ir.actions.act_window">
+        <field name="name">Select Winner</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">rifas.winner.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Menu action for Raffle list view -->
+    <record id="action_rifas_raffle_select_winner" model="ir.actions.server">
+        <field name="name">Select Winner</field>
+        <field name="model_id" ref="rifas.model_rifas_raffle"/>
+        <field name="binding_model_id" ref="rifas.model_rifas_raffle"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = {
+                    'name': 'Select Winner',
+                    'type': 'ir.actions.act_window',
+                    'res_model': 'rifas.winner.wizard',
+                    'view_mode': 'form',
+                    'target': 'new',
+                    'context': {'default_raffle_id': records.id},
+                }
+                result = action
+        </field>
+    </record>
+</odoo>

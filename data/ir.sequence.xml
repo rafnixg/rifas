@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sequence for Rifas Sale Orders -->
+        <record id="seq_rifas_sale_order" model="ir.sequence">
+            <field name="name">Rifas Sale Order</field>
+            <field name="code">rifas.sale.order</field>
+            <field name="prefix">RIFA/OV/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequence for Rifas Payments -->
+        <record id="seq_rifas_payment" model="ir.sequence">
+            <field name="name">Rifas Payment</field>
+            <field name="code">rifas.payment</field>
+            <field name="prefix">RIFA/PAGO/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

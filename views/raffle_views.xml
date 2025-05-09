@@ -1,0 +1,109 @@
+<odoo>
+    <data>
+    <!-- Vista de árbol y formulario para Rifa -->
+    <record id="view_rifa_tree" model="ir.ui.view">
+        <field name="name">rifa.tree</field>
+        <field name="model">rifas.raffle</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" string="Rifa"/>
+                <field name="asignation_type" string="Tipo de asignación"/>
+                <field name="state" string="Estado" widget="badge"/>
+                <field name="qty_min" string="Número mínimo de boletos"/>
+                <field name="date_end" string="Fecha de finalización"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rifa_form" model="ir.ui.view">
+        <field name="name">rifa.form</field>
+        <field name="model">rifas.raffle</field>
+        <field name="arch" type="xml">
+            <form string="Rifa">
+                <header>
+                    <button name="action_publish" type="object" string="Publicar Rifa" class="btn-primary" invisible="state != 'draft'" />
+                    <button name="action_view_sale_order" type="object" string="Ventas" class="btn-primary" />
+                    <button name="action_view_ticket" type="object" string="Tickets" class="btn-primary" />
+                    <button name="action_winner" type="object" string="Asignar Ganador" class="btn-primary" />
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <field name="image_feature" widget='image' class="oe_avatar" />
+                    <div class="oe_title mb24">
+                        <h1>
+                            <field name="name" placeholder="Rifa de..." string="Nombre de la rifa" required="1"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group>
+                            <field name="date_end" string="Fecha del Sorteo" required="1"/>
+                            <field name="asignation_type" string="Tipo de asignación"/>
+                            <field name="winning_number" string="Número Ganador" readonly="1" invisible="winning_number == 0"/>
+                            <field name="winning_ticket_id" string="Ganador" readonly="1" invisible="winning_number == 0"/>
+                        </group>
+                        <group>
+                            <field name="price" string="Precio del ticket" required="1"/>
+                            <field name="qty_min" string="Mínimo de tickets" required="1"/>
+                            <field name="ticket_max" string="Tickets en sorteo" required="1"/>
+                            <field name="ticket_sold" string="Tickets vendidos" readonly="1"/>	
+                            <field name="ticket_available" string="Tickets disponibles" readonly="1"/>
+                        </group>
+                    </group>
+                    <field name="description" string="Descripción" required="1"/>
+                   <notebook>
+                    <page string="Imagenes Extras">
+                        <field name="image_ids" widget="many2many_list">
+                            <list>
+                                <field name="id"/>
+                                <field name="image" widget='image' class="oe_avatar" />
+                            </list>
+                            <form>
+                                <sheet>
+                                    <group>
+                                        <field name="image" widget='image' class="oe_avatar" />
+                                        <field name="rifa_id" string="Rifa" invisible="1"/>
+                                    </group>
+                                </sheet>
+                            </form>
+                        </field>
+                    </page>
+                    <page string="Tickets">
+                        <field name="ticket_ids" context="{'create': 'false'}">
+                            <list create="false" delete="false">
+                                <field name="number" string="Número de Ticket"/>
+                                <field name="client_id" string="Cliente"/>
+                                <field name="state" string="Estado" widget="badge"/>
+                            </list>
+                        </field>
+                    </page>
+                    <page string="Ventas">
+                        <field name="sale_order_ids" context="{'create': 'false'}">
+                            <list create="false" delete="false">
+                                <field name="name" string="Orden de Venta"/>
+                                <field name="client_id" string="Cliente"/>
+                                <field name="ticket_count" string="# Tickets"/>
+                                <field name="amount" string="Monto"/>
+                                <field name="state" string="Estado" widget="badge"/>
+                            </list>
+                        </field>
+                    </page>
+                   </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Acciones y menú -->
+    <record id="action_rifa" model="ir.actions.act_window">
+        <field name="name">Rifas</field>
+        <field name="res_model">rifas.raffle</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</data>
+<menuitem id="menu_rifas_root" name="Rifas" sequence="10"/>
+<menuitem id="menu_rifas_rifa" name="Gestión de Rifas" parent="menu_rifas_root" sequence="10"/>
+<menuitem id="menu_rifas_rifa_items" name="Rifas" parent="menu_rifas_rifa" action="action_rifa" sequence="10"/>
+
+</odoo>
