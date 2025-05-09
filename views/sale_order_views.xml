@@ -8,7 +8,7 @@
                 <field name="client_id"/>
                 <field name="email"/>
                 <field name="amount" string="Monto"/>
-                <field name="state" widget="badge"/>
+                <field name="state" widget="badge" decoration-warning="state == 'review'" decoration-success="state == 'done'" decoration-danger="state == 'cancel'"/>
                 <field name="create_date"/>
             </list>
         </field>
@@ -25,9 +25,9 @@
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
-                    <div class="oe_title mb24">
+                    <div class="oe_title" invisible="not name">
                         <h1>
-                            <field name="name"/>
+                            <field name="name" readonly="1"/>
                         </h1>
                     </div>
                     <group>
@@ -47,7 +47,7 @@
                             <field name="ticket_ids" context="{'default_client_id': client_id, 'default_sale_order_id': id, 'default_rifa_id': rifa_id}"  readonly="state in ('done','cancel')">
                                 <list>
                                     <field name="number" string="Número de Ticket"/>
-                                    <field name="state" string="Estado" widget="badge"/>
+                                    <field name="state" string="Estado" widget="badge" decoration-warning="state == 'review'" decoration-success="state == 'approve'"/>
                                 </list>
                                 <form>
                                     <sheet>

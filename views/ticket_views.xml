@@ -9,7 +9,7 @@
                 <field name="number"/>
                 <field name="client_id"/>
                 <field name="is_winner"/>
-                <field name="state" widget="badge" />
+                <field name="state" widget="badge" decoration-warning="state == 'review'" decoration-success="state == 'approve'"/>
             </list>
         </field>
     </record>

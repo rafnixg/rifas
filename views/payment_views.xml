@@ -31,9 +31,9 @@
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
-                    <div class="oe_title mb24">
+                    <div class="oe_title" invisible="not name">
                         <h1>
-                            <field name="name"/>
+                            <field name="name" readonly="1"/>
                         </h1>
                     </div>
                     <group>

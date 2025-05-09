@@ -23,7 +23,7 @@ class Rifa(models.Model):
     _description = 'Rifa'
 
     name = fields.Char(required=True)
-    description = fields.Text()
+    description = fields.Html(string='Descripción')
     image_feature = fields.Binary(string='Imagen Principal')
     image_ids = fields.One2many('rifas.image', 'rifa_id', string='Imágenes')
     date_end = fields.Date()
