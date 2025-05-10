@@ -2,9 +2,7 @@
 <odoo>
     <template id="rifas_checkout" name="Checkout">
         <t t-call="rifas.rifas_layout">
-            <t t-set="title">Checkout - WebbyRifas</t>
-            
-            <!-- Include checkout-specific CSS -->
+            <t t-set="title">Checkout - WebbyRifas</t>            <!-- Include checkout-specific CSS -->
             <t t-set-slot="head">
                 <link rel="stylesheet" href="/rifas/static/css/checkout.css"/>
             </t>
@@ -27,16 +25,16 @@
                         <tbody>
                             <t t-foreach="selected_tickets" t-as="ticket">
                                 <tr>
-                                    <td t-esc="raffle.name"/>
-                                    <td t-esc="ticket.number"/>
-                                    <td t-esc="raffle.ticket_price" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                    <td t-esc="ticket['raffle_name']"/>
+                                    <td t-esc="ticket['number']"/>
+                                    <td t-esc="ticket['price']"/>
                                 </tr>
                             </t>
                         </tbody>
                         <tfoot>
                             <tr>
                                 <td colspan="2" class="text-right">Total:</td>
-                                <td t-esc="total_amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                <td t-esc="total_amount"/>
                             </tr>
                         </tfoot>
                     </table>
@@ -48,7 +46,7 @@
                     
                     <form t-att-action="'/rifas/checkout/submit/%s' % raffle.id" method="post">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                        <input type="hidden" name="ticket_ids" t-att-value="','.join(str(t.id) for t in selected_tickets)"/>
+                        <input type="hidden" name="ticket_ids" t-att-value="','.join(str(t['number']) for t in selected_tickets)"/>
                     
                         <div class="form-grid">
                             <!-- Personal Information -->
@@ -104,12 +102,12 @@
                                     <t t-foreach="payment_methods" t-as="method">
                                         <div t-att-id="'payment-info-%s' % method.id" class="payment-method-details" style="display: none;">
                                             <p t-esc="method.description"/>
-                                            <t t-if="method.bank_account_number">
+                                            <!-- <t t-if="method.bank_account_number">
                                                 <div class="account-info">
                                                     <p><strong>Cuenta bancaria:</strong> <span t-esc="method.bank_account_number"/></p>
                                                     <p><strong>Titular:</strong> <span t-esc="method.bank_account_owner"/></p>
                                                 </div>
-                                            </t>
+                                            </t> -->
                                         </div>
                                     </t>
                                 </div>

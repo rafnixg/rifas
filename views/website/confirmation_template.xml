@@ -26,7 +26,7 @@
                         <div class="order-details">
                             <p><strong>Rifa:</strong> <t t-esc="raffle.name"/></p>
                             <p><strong>Fecha:</strong> <t t-esc="order.create_date" t-options="{'widget': 'datetime'}"/></p>
-                            <p><strong>Estado:</strong> <span class="badge text-bg-warning">Pendiente de Pago</span></p>
+                            <p><strong>Estado:</strong> <span class="badge text-bg-warning">Pago en revision</span></p>
                         </div>
                         
                         <div class="ticket-summary">
@@ -38,30 +38,22 @@
                             </div>
                         </div>
                         
-                        <div class="payment-instructions">
+                        <!-- <div class="payment-instructions">
                             <h4>Instrucciones de Pago</h4>
-                            <t t-if="order.payment_method_id">
-                                <div class="payment-method">
-                                    <p><strong>Método de Pago:</strong> <t t-esc="order.payment_method_id.name"/></p>
-                                    <div class="payment-details">
-                                        <t t-if="order.payment_method_id.description">
-                                            <div t-esc="order.payment_method_id.description"/>
-                                        </t>
-                                        <t t-if="order.payment_method_id.bank_account_number">
-                                            <div class="account-info">
-                                                <p><strong>Cuenta bancaria:</strong> <span t-esc="order.payment_method_id.bank_account_number"/></p>
-                                                <p><strong>Titular:</strong> <span t-esc="order.payment_method_id.bank_account_owner"/></p>
-                                            </div>
-                                        </t>
-                                    </div>
+                            <div class="payment-method">
+                                <p><strong>Método de Pago:</strong> <t t-esc="order.payment_id.payment_method_id.name"/></p>
+                                <div class="payment-details">
+                                    <t t-if="order.payment_id.payment_method_id.description">
+                                        <div t-esc="order.payment_id.payment_method_id.description"/>
+                                    </t>
                                 </div>
-                            </t>
+                            </div>
                             <p class="payment-note">Por favor realiza tu pago en las próximas 24 horas para confirmar tu participación.</p>
-                        </div>
+                        </div> -->
                     </div>
                     
                     <div class="next-steps text-center mt-4">
-                        <a href="/rifas" class="button">Volver al inicio</a>
+                        <a href="/" class="button">Volver al inicio</a>
                     </div>
                 </div>
             </div>

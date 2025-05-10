@@ -12,8 +12,7 @@
         "base",
         # "website",
         # "mail"
-    ],
-    "data": [
+    ],    "data": [
         "security/ir.model.access.csv",
         "views/payment_views.xml",
         "views/raffle_views.xml",
@@ -31,13 +30,15 @@
     "application": True,
     "license": "LGPL-3",
     "assets": {
-        "web.assets_frontend": [
+        "web.assets_common": [
             "rifas/static/css/global.css",
+        ],
+        "web.assets_frontend": [
             "rifas/static/css/home.css",
             "rifas/static/css/raffle.css",
             "rifas/static/css/checkout.css",
+            "rifas/static/js/raffle.js",
             "rifas/static/js/checkout.js",
-            "rifas/static/js/raffle.js"
-        ]
+        ],
     },
 }

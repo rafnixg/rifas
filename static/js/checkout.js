@@ -1,45 +1,36 @@
-odoo.define('rifas.checkout', function (require) {
-    'use strict';
+// Vanilla JS implementation for checkout page
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize checkout page functionality
+    initCheckoutPage();
+});
+
+function initCheckoutPage() {
+    const checkoutContainer = document.querySelector('.checkout-container');
     
-    var publicWidget = require('web.public.widget');
+    // If we're not on the checkout page, exit
+    if (!checkoutContainer) {
+        return;
+    }
     
-    publicWidget.registry.CheckoutPage = publicWidget.Widget.extend({
-        selector: '.checkout-container',
-        events: {
-            'change #payment_method': '_onChangePaymentMethod',
-        },
-        
-        /**
-         * @override
-         */
-        start: function () {
-            var def = this._super.apply(this, arguments);
-            return def;
-        },
-        
-        //--------------------------------------------------------------------------
-        // Handlers
-        //--------------------------------------------------------------------------
-        
-        /**
-         * Show/hide payment method details when a payment method is selected
-         *
-         * @private
-         * @param {Event} ev
-         */
-        _onChangePaymentMethod: function (ev) {
-            var $target = $(ev.currentTarget);
-            var methodId = $target.val();
+    // Payment method selection handler
+    const paymentMethodSelect = document.getElementById('payment_method');
+    if (paymentMethodSelect) {
+        paymentMethodSelect.addEventListener('change', function() {
+            const methodId = this.value;
             
             // Hide all payment method details
-            $('.payment-method-details').hide();
+            const methodDetails = document.querySelectorAll('.payment-method-details');
+            methodDetails.forEach(function(detail) {
+                detail.style.display = 'none';
+            });
             
             // Show the details for the selected payment method
             if (methodId) {
-                $('#payment-info-' + methodId).show();
+                const selectedDetail = document.getElementById('payment-info-' + methodId);
+                if (selectedDetail) {
+                    selectedDetail.style.display = 'block';
+                }
             }
-        },
-    });
-    
-    return publicWidget.registry.CheckoutPage;
-});
+        });
+    }
+}

@@ -7,6 +7,40 @@ from odoo.exceptions import ValidationError
 
 class RifasCheckout(http.Controller):
 
+
+    def _validate_ticket_availability(self, raffle_id, ticket_ids):
+        """
+        Validate if the selected tickets are available for purchase.
+        """
+        ticket_ids_list = [ticket_id['number'] for ticket_id in ticket_ids]
+        tickets = request.env['rifas.ticket'].sudo().search([
+            ('number', 'in', ticket_ids_list),
+            ('rifa_id', '=', raffle_id)
+        ])
+        if tickets:
+            raise ValidationError(_("Some selected tickets are not available."))
+
+    def _get_selected_tickets(self, raffle, post):
+        """
+        Retrieve selected tickets from the session or post data.
+        """
+        ticket_ids = post.get('ticket_ids', [])
+        selected_tickets = [
+            {
+                'number': int(x),
+                'raffle_id': raffle.id,
+                'price': raffle.price,
+                'raffle_name': raffle.name,
+            }
+            for x in ticket_ids.split(',') if x.isdigit()
+        ]
+
+        if not selected_tickets:
+            # No tickets selected, redirect to raffle page
+            return request.redirect(f'/raffle/{raffle.id}')
+        self._validate_ticket_availability(raffle.id, selected_tickets)
+        return selected_tickets
+
     @http.route(['/rifas/checkout/<int:raffle_id>'], type='http', auth="public", website=True)
     def checkout(self, raffle_id, **post):
         """Display the checkout page with selected tickets"""
@@ -15,54 +49,23 @@ class RifasCheckout(http.Controller):
             return request.redirect('/')
 
         # Get selected tickets from session or post
-        ticket_ids = post.get('ticket_ids', '')
-        selected_tickets = []
-        
-        if ticket_ids:
-            # Comma-separated list of ticket IDs
-            ids = [int(x) for x in ticket_ids.split(',') if x.isdigit()]
-            selected_tickets = request.env['rifas.ticket'].sudo().browse(ids)
-        elif request.session.get('selected_ticket_ids'):
-            # Retrieve from session
-            ids = request.session.get('selected_ticket_ids', [])
-            selected_tickets = request.env['rifas.ticket'].sudo().browse(ids)
-        
+        selected_tickets = self._get_selected_tickets(raffle, post)
         if not selected_tickets:
-            # No tickets selected, redirect to raffle page
             return request.redirect(f'/raffle/{raffle_id}')
-        # Validate that tickets are available
-        unavailable_tickets = selected_tickets.filtered(lambda t: t.state != 'available')
-        if unavailable_tickets:
-            # Some tickets are no longer available
-            return request.render('rifas.rifas_tickets_unavailable', {
-                'raffle': raffle,
-                'unavailable_tickets': unavailable_tickets,
-            })
-        
-        # Calculate total amount
-        total_amount = len(selected_tickets) * raffle.ticket_price
-        
-        # Get payment methods
-        payment_methods = request.env['rifas.payment.method'].sudo().search([
-            ('active', '=', True)
+
+        payment_methods = request.env['rifas.payment_method'].sudo().search([
+            ('is_active', '=', True)
         ])
-        
-        # Try to get partner information from logged in user
-        partner = request.env.user.partner_id if request.env.user.id != request.env.ref('base.public_user').id else False
-        
+
+        total_amount = len(selected_tickets) * raffle.price
+
         values = {
             'raffle': raffle,
             'selected_tickets': selected_tickets,
             'total_amount': total_amount,
             'payment_methods': payment_methods,
-            'partner': partner,
-            'currency': request.env.company.currency_id,
         }
-        
-        # Store selected ticket IDs in session
-        if selected_tickets:
-            request.session['selected_ticket_ids'] = selected_tickets.ids
-        
+
         return request.render("rifas.rifas_checkout", values)
 
     @http.route(['/rifas/checkout/submit/<int:raffle_id>'], type='http', auth="public", website=True, methods=['POST'])
@@ -71,108 +74,102 @@ class RifasCheckout(http.Controller):
         raffle = request.env['rifas.raffle'].sudo().browse(raffle_id)
         if not raffle.exists():
             return request.redirect('/rifas')
-            
+
         # Get selected tickets from post data
-        ticket_ids = post.get('ticket_ids', '')
-        selected_tickets = []
-        
-        if ticket_ids:
-            # Comma-separated list of ticket IDs
-            ids = [int(x) for x in ticket_ids.split(',') if x.isdigit()]
-            selected_tickets = request.env['rifas.ticket'].sudo().browse(ids)
-        elif request.session.get('selected_ticket_ids'):
-            # Retrieve from session
-            ids = request.session.get('selected_ticket_ids', [])
-            selected_tickets = request.env['rifas.ticket'].sudo().browse(ids)
-            
+        selected_tickets = self._get_selected_tickets(raffle, post)
         if not selected_tickets:
             return request.redirect(f'/raffle/{raffle_id}')
-            
-        # Validate that tickets are available
-        unavailable_tickets = selected_tickets.filtered(lambda t: t.state != 'available')
-        if unavailable_tickets:
-            return request.render('rifas.rifas_tickets_unavailable', {
-                'raffle': raffle,
-                'unavailable_tickets': unavailable_tickets,
-            })
-            
-        # Create or update partner
-        partner_values = {
+
+        # Create or update client
+        client_values = {
             'name': post.get('name'),
             'email': post.get('email'),
             'phone': post.get('phone'),
-            'street': post.get('address'),
-            'vat': post.get('document'),
+            # 'street': post.get('address'),
+            # 'vat': post.get('document'),
         }
-        
-        # Find existing partner by email
-        partner = request.env['res.partner'].sudo().search([
+
+        # Find existing client by email
+        client = request.env['rifas.client'].sudo().search([
             ('email', '=', post.get('email'))
         ], limit=1)
-        
-        if partner:
-            # Update existing partner
-            partner.sudo().write(partner_values)
+
+        if client:
+            # Update existing client
+            client.sudo().write(client_values)
         else:
-            # Create new partner
-            partner = request.env['res.partner'].sudo().create(partner_values)
-            
+            # Create new client
+            client = request.env['rifas.client'].sudo().create(client_values)
+
         # Calculate total amount
-        total_amount = len(selected_tickets) * raffle.ticket_price
-            
+        total_amount = len(selected_tickets) * raffle.price
+
         # Create the sale order
         order_values = {
-            'partner_id': partner.id,
-            'raffle_id': raffle.id,
-            'amount_total': total_amount,
-            'payment_method_id': int(post.get('payment_method')) if post.get('payment_method') else False,
-            'payment_reference': post.get('payment_reference', ''),
-            'notes': post.get('payment_notes', ''),
+            'client_id': client.id,
+            'rifa_id': raffle.id,
+            'amount': total_amount,
+            # 'payment_method_id': int(post.get('payment_method')) if post.get('payment_method') else False,
+            # 'payment_reference': post.get('payment_reference', ''),
+            # 'notes': post.get('payment_notes', ''),
         }
-        
-        order = request.env['rifas.order'].sudo().create(order_values)
-        
+
+        order = request.env['rifas.sale_order'].sudo().create(order_values)
+
         # Link tickets to the order and mark them as reserved
-        selected_tickets.sudo().write({
-            'state': 'reserved',
-            'partner_id': partner.id,
-            'order_id': order.id,
-        })
-        
-        # Clear session data
-        if 'selected_ticket_ids' in request.session:
-            del request.session['selected_ticket_ids']
-            
+        tickets = [ {
+                'number': ticket['number'],
+                'rifa_id': raffle.id,
+                'sale_order_id': order.id,
+                'client_id': client.id,
+            } for ticket in selected_tickets
+        ]
+        request.env['rifas.ticket'].sudo().create(tickets)
+
+        # Create payment record
+        payment_values = {
+            'client_id': client.id,
+            'rifa_id': raffle.id,
+            'sale_order_id': order.id,
+            'amount': total_amount,
+            'payment_method_id': int(post.get('payment_method')) if post.get('payment_method') else False,
+            'reference': post.get('payment_reference', ''),
+            # 'notes': post.get('payment_notes', ''),
+        }
+        payment = request.env['rifas.payment'].sudo().create(payment_values)
+
+        order.payment_id = payment.id
+        order.ticket_ids.write({'payment_id': payment.id})
+
         # Send confirmation email
-        try:
-            template = request.env.ref('rifas.email_template_order_confirmation')
-            if template:
-                template.sudo().with_context(order=order).send_mail(
-                    order.id, force_send=True, email_values={'email_to': partner.email}
-                )
-        except Exception as e:
-            # Log the error but continue the process
-            request.env['ir.logging'].sudo().create({
-                'name': 'Rifas Order Email',
-                'type': 'server',
-                'dbname': request.env.cr.dbname,
-                'level': 'error',
-                'message': str(e),
-            })
-            
+        # try:
+        #     template = request.env.ref('rifas.email_template_order_confirmation')
+        #     if template:
+        #         template.sudo().with_context(order=order).send_mail(
+        #             order.id, force_send=True, email_values={'email_to': client.email}
+        #         )
+        # except Exception as e:
+        #     # Log the error but continue the process
+        #     request.env['ir.logging'].sudo().create({
+        #         'name': 'Rifas Order Email',
+        #         'type': 'server',
+        #         'dbname': request.env.cr.dbname,
+        #         'level': 'error',
+        #         'message': str(e),
+        #     })
         return request.redirect(f'/rifas/order/confirmation/{order.id}')
-        
+
     @http.route(['/rifas/order/confirmation/<int:order_id>'], type='http', auth="public", website=True)
     def order_confirmation(self, order_id, **post):
         """Display the order confirmation page"""
-        order = request.env['rifas.order'].sudo().browse(order_id)
+        order = request.env['rifas.sale_order'].sudo().browse(order_id)
         if not order.exists():
             return request.redirect('/rifas')
-            
+
         values = {
             'order': order,
-            'raffle': order.raffle_id,
+            'raffle': order.rifa_id,
             'tickets': order.ticket_ids,
         }
-        
+
         return request.render("rifas.rifas_order_confirmation", values)

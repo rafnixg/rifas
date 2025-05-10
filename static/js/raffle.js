@@ -1,103 +1,85 @@
-odoo.define('rifas.raffle', function (require) {
-    'use strict';
+// Vanilla JS implementation for raffle ticket selection
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize ticket selection functionality
+    initTicketSelection();
+});
+
+function initTicketSelection() {
+    const ticketSelector = document.querySelector('.ticket-selector');
     
-    var publicWidget = require('web.public.widget');
+    // If we're not on the raffle page, exit
+    if (!ticketSelector) {
+        return;
+    }
     
-    publicWidget.registry.RafflePage = publicWidget.Widget.extend({
-        selector: '.ticket-selector',
-        events: {
-            'click .ticket-selector__number': '_onClickTicket',
-            'click .button-checkout': '_onClickCheckout',
-        },
-        
-        /**
-         * @override
-         */
-        start: function () {
-            this.selectedTickets = [];
-            this.ticketPrice = parseFloat($('.ticket-selector').data('price')) || 0;
-            this._updateSummary();
-            return this._super.apply(this, arguments);
-        },
-        
-        //--------------------------------------------------------------------------
-        // Private
-        //--------------------------------------------------------------------------
-        
-        /**
-         * Updates the summary with the current selection
-         *
-         * @private
-         */
-        _updateSummary: function () {
-            var count = this.selectedTickets.length;
-            var total = (count * this.ticketPrice).toFixed(2);
-            
-            $('#ticket-count').text(count);
-            $('#ticket-total').text(total);
-            
-            // Enable/disable checkout button based on selection
-            if (count > 0) {
-                $('.button-checkout').removeAttr('disabled');
-            } else {
-                $('.button-checkout').attr('disabled', 'disabled');
-            }
-        },
-        
-        //--------------------------------------------------------------------------
-        // Handlers
-        //--------------------------------------------------------------------------
-        
-        /**
-         * Handles click on a ticket number
-         *
-         * @private
-         * @param {Event} ev
-         */
-        _onClickTicket: function (ev) {
-            var $ticket = $(ev.currentTarget);
-            var ticketNumber = $ticket.data('number');
-            var ticketId = $ticket.data('id');
+    const ticketPrice = parseFloat(ticketSelector.dataset.price) || 0;
+    const raffleId = ticketSelector.dataset.raffleId;
+    const selectedTickets = [];
+    
+    // Add click handlers to all ticket numbers
+    const ticketButtons = document.querySelectorAll('.ticket-selector__number');
+    ticketButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            const number = this.dataset.number;
             
             // Toggle selection
-            if ($ticket.hasClass('selected')) {
-                // Remove from selection
-                $ticket.removeClass('selected');
-                this.selectedTickets = this.selectedTickets.filter(function(t) {
-                    return t.id !== ticketId;
-                });
+            if (this.classList.contains('selected')) {
+                // Remove selection
+                this.classList.remove('selected');
+                
+                // Remove from selectedTickets array
+                const index = selectedTickets.findIndex(t => t.number === number);
+                if (index !== -1) {
+                    selectedTickets.splice(index, 1);
+                }
             } else {
-                // Add to selection
-                $ticket.addClass('selected');
-                this.selectedTickets.push({
-                    id: ticketId,
-                    number: ticketNumber
+                // Add selection
+                this.classList.add('selected');
+                
+                // Add to selectedTickets array
+                selectedTickets.push({
+                    number
                 });
             }
             
-            this._updateSummary();
-        },
-        
-        /**
-         * Handles click on the checkout button
-         *
-         * @private
-         * @param {Event} ev
-         */
-        _onClickCheckout: function (ev) {
-            ev.preventDefault();
+            // Update summary
+            updateSummary();
+        });
+    });
+    
+    // Checkout button handler
+    const checkoutButton = ticketSelector.querySelector('.button-checkout');
+    if (checkoutButton) {
+        checkoutButton.addEventListener('click', function(e) {
+            e.preventDefault();
             
-            if (this.selectedTickets.length === 0) {
+            if (selectedTickets.length === 0) {
                 return;
             }
-            
-            var raffleId = $('.ticket-selector').data('raffle-id');
-            var ticketIds = this.selectedTickets.map(function(t) { return t.id; }).join(',');
+            // Create comma-separated list of IDs
+            const ticketIds = selectedTickets.map(t => t.number).join(',');
             
             // Redirect to checkout page
             window.location.href = '/rifas/checkout/' + raffleId + '?ticket_ids=' + ticketIds;
-        }
-    });
+        });
+    }
     
-    return publicWidget.registry.RafflePage;
-});
+    // Function to update the summary display
+    function updateSummary() {
+        const count = selectedTickets.length;
+        const total = (count * ticketPrice).toFixed(2);
+        
+        document.getElementById('ticket-count').textContent = count;
+        document.getElementById('ticket-total').textContent = total;
+        
+        // Enable/disable checkout button based on selection
+        if (count > 0) {
+            checkoutButton.removeAttribute('disabled');
+        } else {
+            checkoutButton.setAttribute('disabled', 'disabled');
+        }
+    }
+    
+    // Initialize summary
+    updateSummary();
+}

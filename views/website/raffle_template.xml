@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>    <template id="raffle_template" name="Rifa">
         <t t-call="rifas.rifas_layout">
-            <t t-set="title" t-value="rifa.name + ' - WebbyRifas'"/>
-            
-            <!-- Include raffle-specific CSS -->
+            <t t-set="title" t-value="rifa.name + ' - WebbyRifas'"/>            <!-- Include raffle-specific CSS -->
             <t t-set-slot="head">
                 <link rel="stylesheet" href="/rifas/static/css/raffle.css"/>
             </t>

@@ -84,17 +84,19 @@
                 <a t-att-href="rifa.slug_url" class="button">Comprar Ticket</a>
             </t>
         </section>
-    </template>
-    
-    <!-- Base Template with standalone structure -->
+    </template>    <!-- Base Template with standalone structure -->
     <template id="rifas_layout" name="Rifas Layout">
         <html lang="es">
             <head>
                 <meta charset="UTF-8" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <title><t t-esc="title or 'WebbyRifas'"/></title>
-                <!-- Load global.css -->
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />                <title><t t-esc="title or 'WebbyRifas'"/></title>
+                <!-- Load CSS -->
                 <link rel="stylesheet" href="/rifas/static/css/global.css"/>
+                <!-- Optional jQuery for convenience -->
+                <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"/>
+                <!-- Load vanilla JS -->
+                <script type="text/javascript" src="/rifas/static/js/raffle.js"/>
+                <script type="text/javascript" src="/rifas/static/js/checkout.js"/>
             </head>
             <body>
                 <t t-call="rifas.rifas_header"/>
