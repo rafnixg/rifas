@@ -186,6 +186,8 @@
     color: #333;
     border-bottom: 1px solid #eee;
     padding-bottom: 10px;
+    justify-content: space-between;
+    display: flex;
 }
 
 .order-summary h4 {
@@ -213,6 +215,14 @@
 .text-bg-warning {
     background-color: #fff3cd;
     color: #664d03;
+}
+.text-bg-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+.text-bg-danger {
+    background-color: #f8d7da;
+    color: #721c24;
 }
 
 .ticket-numbers {

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>    <template id="rifas_index" name="Rifas Index">
+<odoo>    
+    <template id="rifas_index" name="Rifas Index">
         <t t-call="rifas.rifas_layout">
+            <!-- Set the title for the page -->
             <t t-set="title">WebbyRifas - Inicio</t>
-            
             <!-- Include home-specific CSS -->
             <t t-set-slot="head">
                 <link rel="stylesheet" href="/rifas/static/css/home.css"/>
             </t>
-            
+            <!-- Set rifas variable to the first rifa -->
             <t t-set="rifa" t-value="rifas[0]"/>
-            
+            <!-- Include hero component -->
             <section class="hero">
                 <div class="hero__container">
                     
@@ -23,39 +24,26 @@
                             <t t-esc="rifa.description"/>
                         </div>
                         <a t-att-href="rifa.slug_url" class="button">Comprar Ticket</a>
-                    </div>                </div>
-            </section>
-
-            <t t-call="rifas.rifas_gallery"/>
-
-            <section class="cta">
-                <p class="cta__text">¡Hazlo posible, participa ahora!</p>
-                <p class="cta__subtext">Muchos más podrán apoyarte, ¡es la diferencia de verdad!</p>
-                <a t-att-href="rifa.slug_url" class="button">Comprar Ticket</a>
-            </section>
-
-            <t t-call="rifas.rifas_payment_methods"/>
-
-            <section class="raffles">
-                <h2 class="raffles__title">Sorteos Activos</h2>
-                <div class="raffles__list">
-                    <t t-foreach="rifas" t-as="rifa_obj">
-                        <article class="raffle-card">
-                            <div>
-                                <img t-att-src="rifa_obj.image_feature_url" class="raffle-card__image" alt="Imagen de la rifa"/>
-                            </div>
-                            <h3 class="raffle-card__title">
-                                <t t-esc="rifa_obj.name"/>
-                            </h3>
-                            <p class="raffle-card__description">
-                                <t t-esc="rifa_obj.description_short"/>
-                            </p>
-                            <a t-att-href="rifa_obj.slug_url" class="button">Comprar Ticket</a>
-                        </article>
-                    </t>
+                    </div>
                 </div>
             </section>
-
+            <!-- Include gallery component -->
+            <t t-call="rifas.rifas_gallery">
+                <t t-set="image_ids" t-value="rifa.image_ids"/>
+            </t>
+            <!-- Include Call to Action component -->
+             <t t-call="rifas.rifas_cta">
+                <t t-set="rifa" t-value="rifa"/>
+            </t>
+            <!-- Include payment methods component -->
+            <t t-call="rifas.rifas_payment_methods">
+                <t t-set="payments_method" t-value="payments_method"/>
+            </t>
+            <!-- Include raffles component -->
+            <t t-call="rifas.rifas_raffle">
+                <t t-set="rifas" t-value="rifas"/>
+            </t>                
+            <!-- Include faq component -->
             <t t-call="rifas.rifas_faq"/>
         </t>
     </template>

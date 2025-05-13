@@ -161,18 +161,20 @@ class RifasCheckout(http.Controller):
         # Send confirmation email
         order.send_email_confirmation()
         # Redirect to order confirmation page
-        return request.redirect(f"/rifas/order/confirmation/{order.id}")
+        return request.redirect(f"/rifas/order/confirmation/{order.validation_code}")
 
     @http.route(
-        ["/rifas/order/confirmation/<int:order_id>"],
+        ["/rifas/order/confirmation/<validation_code>"],
         type="http",
         auth="public",
         website=True,
     )
-    def order_confirmation(self, order_id, **post):
+    def order_confirmation(self, validation_code, **post):
         """Display the order confirmation page"""
-        order = request.env["rifas.sale_order"].sudo().browse(order_id)
-        if not order.exists():
+        order = request.env["rifas.sale_order"].sudo().search(
+            [("validation_code", "=", validation_code)], limit=1
+        )
+        if not order:
             return request.redirect("/rifas")
 
         values = {

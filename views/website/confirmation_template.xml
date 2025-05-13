@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Template for order confirmation page -->
     <template id="rifas_order_confirmation" name="Order Confirmation">
         <t t-call="rifas.rifas_layout">
             <t t-set="title">Confirmación de Orden - WebbyRifas</t>
             
             <!-- Include confirmation-specific CSS -->
             <t t-set-slot="head">
-                <link rel="stylesheet" href="/rifas/static/css/checkout.css"/>
+                <link rel="stylesheet" href="/rifas/static/css/checkout.css?v1.0.2"/>
             </t>
             
             <div class="checkout-container">
@@ -21,12 +22,11 @@
                     </div>
                     
                     <div class="order-summary">
-                        <h3>Resumen de la Orden</h3>
+                        <h3>Resumen de la Orden <span class="badge text-bg-warning">Pago en revision</span></h3>
                         
                         <div class="order-details">
                             <p><strong>Rifa:</strong> <t t-esc="raffle.name"/></p>
-                            <p><strong>Fecha:</strong> <t t-esc="order.create_date" t-options="{'widget': 'datetime'}"/></p>
-                            <p><strong>Estado:</strong> <span class="badge text-bg-warning">Pago en revision</span></p>
+                            <p><strong>Fecha de Compra:</strong> <t t-esc="order.create_date" t-options="{'widget': 'datetime'}"/></p>
                         </div>
                         
                         <div class="ticket-summary">

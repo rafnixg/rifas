@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>    <template id="raffle_template" name="Rifa">
+<odoo>
+    <template id="raffle_template" name="Rifa">
         <t t-call="rifas.rifas_layout">
-            <t t-set="title" t-value="rifa.name + ' - WebbyRifas'"/>            <!-- Include raffle-specific CSS -->
+            <!-- Set the title for the page -->
+            <t t-set="title" t-value="rifa.name + ' - WebbyRifas'"/>
+            <!-- Include raffle-specific CSS -->
             <t t-set-slot="head">
-                <link rel="stylesheet" href="/rifas/static/css/raffle.css"/>
+                <link rel="stylesheet" href="/rifas/static/css/raffle.css?v=1.0.0"/>
             </t>
-            
+            <!-- Include hero component -->
             <section class="hero">
                 <div class="hero__container">
                     <div class="hero__feature_image">
@@ -23,48 +26,20 @@
                         </div>
                     </div>                </div>
             </section>
-
-            <t t-call="rifas.rifas_gallery"/>
-            <section class="ticket-selector" t-att-data-raffle-id="rifa.id" t-att-data-price="rifa.price" t-if="rifa.state == 'published'">
-                <div class="ticket-selector__stats">
-                    <span>Tickets Disponibles: <strong>
-                        <t t-esc="rifa.ticket_available"/>
-                    </strong></span>
-                    <span>Tickets Vendidos: <strong>
-                        <t t-esc="rifa.ticket_sold"/>
-                    </strong></span>
-                </div>
-                <h2 class="ticket-selector__title">Seleccione los números a comprar</h2>
-                <div class="ticket-selector__grid">
-                    <t t-foreach="tickets_disponibles" t-as="disponible">
-                        <button class="ticket-selector__number" 
-                                t-att-data-number="disponible['number']">
-                            <t t-esc="disponible['number']"/>
-                        </button>
-                    </t>
-                </div>
-                <div class="ticket-selector__summary">
-                    <p>Tickets: <span id="ticket-count">0</span></p>
-                    <p>Total: $<span id="ticket-total">0.00</span></p>
-                </div>
-                <button class="button button-checkout" disabled="disabled">Comprar Tickets</button>
-            </section>
-            <section class="ticket-winner" t-if="rifa.state == 'finished'">
-                <h2 class="ticket-winner__title">Número Ganador</h2>
-                <div class="ticket-winner__number">
-                    <t t-esc="rifa.winning_number"/>
-                </div>
-                <div class="ticket-winner__details">
-                    <p>Ganador: <strong>
-                        <t t-esc="rifa.winning_ticket_id.client_id.name"/>
-                    </strong></p>
-                    <p>Fecha del Sorteo: 
-                        <t t-esc="rifa.date_end"/>
-                    </p>
-                </div>
-
-            </section>
-            <!-- <t t-call="rifas.rifas_payment_methods"/> -->
+            <!-- Include gallery component -->
+            <t t-call="rifas.rifas_gallery">
+                <t t-set="image_ids" t-value="rifa.image_ids"/>
+            </t>
+            <!-- Include ticket selector component if the raffle is published -->
+            <t t-call="rifas.rifas_ticket_selector" t-if="rifa.state == 'publish'">
+                <t t-set="rifa" t-value="rifa"/>
+                <t t-set="selected_tickets" t-value="selected_tickets"/>
+            </t>
+            <!-- Include ticket winner component if the raffle is finished -->
+            <t t-call="rifas.rifas_ticket_winner" t-if="rifa.state == 'finished'">
+                <t t-set="rifa" t-value="rifa"/>
+            </t>
+            <!-- Include faq component -->
             <t t-call="rifas.rifas_faq"/>
         </t>
     </template>

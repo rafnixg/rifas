@@ -14,11 +14,21 @@ class RifaClient(models.Model):
         string="Estado",
     )
     partner_id = fields.Many2one("res.partner", string="Socio")
+    sale_order_count = fields.Integer(
+        string="Órdenes de Venta",
+        compute="_compute_sale_order_count",
+        store=True,
+    )
 
     # ticket_ids = fields.One2many('rifas.ticket', 'client_id', string='Tickets')
     # ruffle_ids = fields.One2many('rifas.raffle', 'client_id', string='Rifas')
-    # sale_order_ids = fields.One2many('rifas.sale_order', 'client_id', string='Órdenes de Venta')
+    sale_order_ids = fields.One2many('rifas.sale_order', 'client_id', string='Órdenes de Venta')
     # payment_ids = fields.One2many('rifas.payment', 'client_id', string='Pagos')
+
+    @api.depends("sale_order_ids")
+    def _compute_sale_order_count(self):
+        for record in self:
+            record.sale_order_count = len(record.sale_order_ids)
 
     def create(self, vals_list):
         val_email = vals_list.get("email")
@@ -35,3 +45,13 @@ class RifaClient(models.Model):
         partner = self.env["res.partner"].create(partner_vals)
         vals_list["partner_id"] = partner.id
         return super(RifaClient, self).create(vals_list)
+
+    def action_view_sales(self):
+        self.ensure_one()
+        return {
+            "name": "Órdenes de Venta",
+            "type": "ir.actions.act_window",
+            "res_model": "rifas.sale_order",
+            "view_mode": "list,form",
+            "domain": [("client_id", "=", self.id)],
+        }

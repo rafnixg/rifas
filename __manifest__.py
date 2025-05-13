@@ -1,6 +1,6 @@
 {
     "name": "Rifas",
-    "version": "18.0.1.1.0",
+    "version": "18.0.2.1.0",
     "summary": "Gestión de rifas para vertical de sorteos",
     "description": """
         Módulo para la gestión de rifas, sorteos y boletos en Odoo 18.0.
@@ -17,8 +17,10 @@
         "views/raffle_views.xml",
         "views/sale_order_views.xml",
         "views/ticket_views.xml",
+        "views/client_views.xml",
         "views/website/components.xml",
         "views/website/home_template.xml",
+        "views/website/validate_template.xml",
         "views/website/raffle_template.xml", 
         "views/website/checkout_template.xml",
         "views/website/confirmation_template.xml",

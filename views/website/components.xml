@@ -9,6 +9,10 @@
                         WebbyRifas
                     </a>
                 </div>
+                <nav class="header__nav">
+                    <a href="/">Inicio</a>
+                    <a href="/rifas/validate">Validar Orden</a>
+                </nav>
             </div>
         </header>
     </template>
@@ -27,7 +31,7 @@
 
     <!-- Payment Methods Component -->
     <template id="rifas_payment_methods" name="Rifas Payment Methods">
-        <section class="payment">
+        <section class="payment" t-if="len(payments_method) > 0">
             <h2 class="payment__title">Formas de Pago</h2>
             <div class="payment__methods">
                 <t t-foreach="payments_method" t-as="method">
@@ -41,10 +45,10 @@
     
     <!-- Gallery Component -->
     <template id="rifas_gallery" name="Rifas Gallery">
-        <t t-if="rifa.image_ids">
+        <t t-if="image_ids">
             <section class="gallery">
                 <div class="gallery__container">
-                    <t t-foreach="rifa.image_ids" t-as="image">
+                    <t t-foreach="image_ids" t-as="image">
                         <div class="gallery__item">
                             <img t-att-src="image.image_url" alt="Imagen de la rifa"/>
                         </div>
@@ -52,6 +56,29 @@
                 </div>
             </section>
         </t>
+    </template>
+
+    <!-- Raffle Component -->
+    <template id="rifas_raffle" name="Rifas">
+        <section class="raffles" t-if="len(rifas) > 1">
+            <h2 class="raffles__title">Sorteos Activos</h2>
+            <div class="raffles__list">
+                <t t-foreach="rifas" t-as="rifa_obj">
+                    <article class="raffle-card">
+                        <div>
+                            <img t-att-src="rifa_obj.image_feature_url" class="raffle-card__image" alt="Imagen de la rifa"/>
+                        </div>
+                        <h3 class="raffle-card__title">
+                            <t t-esc="rifa_obj.name"/>
+                        </h3>
+                        <p class="raffle-card__description">
+                            <t t-esc="rifa_obj.description_short"/>
+                        </p>
+                        <a t-att-href="rifa_obj.slug_url" class="button">Comprar Ticket</a>
+                    </article>
+                </t>
+            </div>
+        </section>
     </template>
 
     <!-- FAQ Component -->
@@ -80,16 +107,73 @@
                     <p>Respuesta...</p>
                 </details>
             </div>
-            <t t-if="rifa">
+            <t t-if="rifa.state == 'publish'">
                 <a t-att-href="rifa.slug_url" class="button">Comprar Ticket</a>
             </t>
         </section>
-    </template>    <!-- Base Template with standalone structure -->
+    </template>
+
+    <!-- Call to Action Component -->
+     <template id="rifas_cta" name="Rifas CTA">
+        <section class="cta">
+            <p class="cta__text">¡Hazlo posible, participa ahora!</p>
+            <p class="cta__subtext">Muchos más podrán apoyarte, ¡es la diferencia de verdad!</p>
+            <a t-att-href="rifa.slug_url" class="button">Comprar Ticket</a>
+        </section>
+     </template>
+
+    <!-- Ticket Selector Component -->
+     <template id="rifas_ticket_selector" name="Rifas Ticket Selector">
+        <section class="ticket-selector" t-att-data-raffle-id="rifa.id" t-att-data-price="rifa.price">
+            <div class="ticket-selector__stats">
+                <span>Tickets Disponibles: <strong>
+                    <t t-esc="rifa.ticket_available"/>
+                </strong></span>
+                <span>Tickets Vendidos: <strong>
+                    <t t-esc="rifa.ticket_sold"/>
+                </strong></span>
+            </div>
+            <h2 class="ticket-selector__title">Seleccione los números a comprar</h2>
+            <div class="ticket-selector__grid">
+                <t t-foreach="tickets_disponibles" t-as="disponible">
+                    <button class="ticket-selector__number" 
+                            t-att-data-number="disponible['number']">
+                        <t t-esc="disponible['number']"/>
+                    </button>
+                </t>
+            </div>
+            <div class="ticket-selector__summary">
+                <p>Tickets: <span id="ticket-count">0</span></p>
+                <p>Total: $<span id="ticket-total">0.00</span></p>
+            </div>
+            <button class="button button-checkout" disabled="disabled">Comprar Tickets</button>
+        </section>
+     </template>
+    <!-- Ticket Winner Component -->
+    <template id="rifas_ticket_winner" name="Rifas Ticket Winner">
+        <section class="ticket-winner">
+                <h2 class="ticket-winner__title">Número Ganador</h2>
+                <div class="ticket-winner__number">
+                    <t t-esc="rifa.winning_number"/>
+                </div>
+                <div class="ticket-winner__details">
+                    <p>Ganador: <strong>
+                        <t t-esc="rifa.winning_ticket_id.client_id.name"/>
+                    </strong></p>
+                    <p>Fecha del Sorteo: 
+                        <t t-esc="rifa.date_end"/>
+                    </p>
+                </div>
+
+            </section>
+    </template>
+    <!-- Base Template with standalone structure -->
     <template id="rifas_layout" name="Rifas Layout">
         <html lang="es">
             <head>
                 <meta charset="UTF-8" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />                <title><t t-esc="title or 'WebbyRifas'"/></title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <title><t t-esc="title or 'WebbyRifas'"/></title>
                 <!-- Load CSS -->
                 <link rel="stylesheet" href="/rifas/static/css/global.css"/>
                 <!-- Optional jQuery for convenience -->

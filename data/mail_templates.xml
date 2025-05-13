@@ -6,7 +6,7 @@
             <field name="name">Rifas: Confirmación de Compra</field>
             <field name="model_id" ref="model_rifas_sale_order"/>
             <field name="subject">¡Gracias por tu compra! Confirmación #{{ object.name }}</field>
-            <field name="email_from">me@rafnixg.dev</field>
+            <field name="email_from">{{ object.client_id.partner_id.company_id.default_from_email }}</field>
             <field name="email_to">{{ object.client_id.email }}</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px; font-family: Arial, Helvetica, sans-serif; color: #444444;">
@@ -65,7 +65,8 @@
                             {% endif %} -->
                             
                             <p>Puedes ver el estado de tu orden en cualquier momento visitando nuestro sitio web.</p>
-                            
+                            <p>Codigo de validación: <strong><t t-out="object.validation_code"/></strong></p>
+                            <p>Recuerda que el sorteo se llevará a cabo el <strong><t t-out="object.rifa_id.date_end" t-options="{'widget': 'date'}"/></strong>.</p>
                             <p>¡Mucha suerte!</p>
                         </td>
                     </tr>
@@ -90,7 +91,7 @@
             <field name="name">Rifas: Notificación de Ganador</field>
             <field name="model_id" ref="model_rifas_ticket"/>
             <field name="subject">¡Felicidades! Has ganado en la rifa {{ object.rifa_id.name }}</field>
-            <field name="email_from">me@rafnixg.dev</field>
+            <field name="email_from">{{ object.client_id.partner_id.company_id.default_from_email }}</field>
             <field name="email_to">{{ object.client_id.email }}</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px; font-family: Arial, Helvetica, sans-serif; color: #444444;">

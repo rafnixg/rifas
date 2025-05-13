@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Template for sale order validation -->
+     <template id="sale_order_validation_confirmation" name="Order Confirmation">
+        <t t-call="rifas.rifas_layout">
+            <t t-set="title">Validación de Orden - WebbyRifas</t>
+
+            <t t-set-slot="head">
+                <link rel="stylesheet" href="/rifas/static/css/checkout.css?v=1.0.1"/>
+            </t>
+            
+            <div class="checkout-container">
+                <div class="checkout-header">
+                    <h1>Validación de Orden</h1>
+                </div>
+                
+                <div class="confirmation-content">
+                    
+                    <div class="order-summary">
+                        <h3>Resumen de la Orden #<t t-esc="order.name"/>
+                            <span t-att-class="'badge text-bg-' + (order.state == 'review' and 'warning' or order.state == 'cancel' and 'danger' or 'success')">
+                                <t t-esc="state"/>
+                            </span>
+                        </h3>
+                        <div class="order-details">
+                            <p><strong>Rifa:</strong> <t t-esc="order.rifa_id.name"/></p>
+                            <p><strong>Fecha:</strong> <t t-esc="order.rifa_id.date_end" t-options="{'widget': 'date'}"/></p>
+                        </div>
+                        <t t-foreach="order.ticket_ids" t-as="ticket">
+                            <div class="ticket-summary">
+                                <h4>Tus Números</h4>
+                                <div class="ticket-numbers">
+                                    <span class="ticket-number"><t t-esc="ticket.number"/></span>
+                                </div>
+                            </div>
+                        </t>
+                        <div class="payment-summary">
+                            <h4>Resumen de Pago</h4>
+                            <p><strong>Total:</strong> <t t-esc="order.amount"/> $</p>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </t>
+
+     </template>
+    <!-- Template for sale order form validation -->
+     <template id="sale_order_form_validation_confirmation" name="Order Confirmation">
+        <t t-call="rifas.rifas_layout">
+            <t t-set="title">Validación de Orden - WebbyRifas</t>
+
+            <t t-set-slot="head">
+                <link rel="stylesheet" href="/rifas/static/css/checkout.css?v=1.0.0"/>
+            </t>
+            
+            <div class="checkout-container">
+                <div class="checkout-header">
+                    <h1>Validación de Orden</h1>
+                </div>
+                
+                <div class="confirmation-content">
+                    <div class="alert alert-danger" t-if="error != 'None'">
+                        <h4>¡Error!</h4>
+                        <p><t t-esc="error"/></p>
+                    </div>
+                    <div class="order-summary">
+                        <form action="/rifas/validate" method="GET" class="text-center">
+                            <div class="form-group text-center">
+                                <label for="validation_code">Codigo de validacion</label><br></br>
+                                <input type="text" id="validation_code" name="validation_code" class="form-control" required="True"/>
+                            </div>
+                            <button type="submit" class="button">Validar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+
+
+
+     </template>
+
+</odoo>

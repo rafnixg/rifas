@@ -1,6 +1,12 @@
+import hashlib
+
 from odoo import models, fields, api
 
-
+STATE_SALE_ORDER = [
+    ("review", "En revisión"),
+    ("done", "Completado"),
+    ("cancel", "Cancelado"),
+]
 class SaleOrder(models.Model):
     _name = "rifas.sale_order"
     _description = "Orden de Venta"
@@ -15,8 +21,11 @@ class SaleOrder(models.Model):
     full_name = fields.Char(
         string="Nombre del cliente", related="client_id.name", store=True
     )
+    validation_code = fields.Char(
+        string="Código de Validación", help="Código de validación para el cliente"
+    )
     state = fields.Selection(
-        [("review", "En revisión"), ("done", "Completado"), ("cancel", "Cancelado")],
+        STATE_SALE_ORDER,
         default="review",
         required=True,
     )
@@ -30,6 +39,20 @@ class SaleOrder(models.Model):
     ticket_count = fields.Integer(
         string="Cantidad de Boletos", compute="_compute_ticket_count", store=True
     )
+    def _generate_valitadtion_code(self):
+        """
+        This method generates a validation code for the sale order.
+        The code is a combination of the sale order ID and the current date.
+        """
+        code = hashlib.md5(
+            (str(self.id) + fields.Datetime.now().strftime("%Y%m%d%H%M%S")).encode()
+        ).hexdigest()
+        validation_code = code[:8]
+        validation_ojb = self.env["rifas.sale_order"].search([("validation_code", "=", validation_code)])
+        if validation_ojb:
+            # If the code already exists, generate a new one
+            return self._generate_valitadtion_code()
+        return validation_code
 
     def _check_amount(self):
         """
@@ -52,10 +75,13 @@ class SaleOrder(models.Model):
             if rifa.state != "publish":
                 raise ValueError("La rifa no está publicada.")
 
+        # Check amount after creating the order
         self._check_amount()
-
+        # Set the name of the order using the sequence
         name = self.env["ir.sequence"].next_by_code("rifas.sale.order") or "Nuevo"
         vals_list["name"] = name
+        # set validation code
+        vals_list["validation_code"] = self._generate_valitadtion_code()
         order = super(SaleOrder, self).create(vals_list)
         return order
 
