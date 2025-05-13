@@ -25,7 +25,7 @@
             </section>
 
             <t t-call="rifas.rifas_gallery"/>
-            <section class="ticket-selector" t-att-data-raffle-id="rifa.id" t-att-data-price="rifa.price">
+            <section class="ticket-selector" t-att-data-raffle-id="rifa.id" t-att-data-price="rifa.price" t-if="rifa.state == 'published'">
                 <div class="ticket-selector__stats">
                     <span>Tickets Disponibles: <strong>
                         <t t-esc="rifa.ticket_available"/>
@@ -49,8 +49,22 @@
                 </div>
                 <button class="button button-checkout" disabled="disabled">Comprar Tickets</button>
             </section>
+            <section class="ticket-winner" t-if="rifa.state == 'finished'">
+                <h2 class="ticket-winner__title">Número Ganador</h2>
+                <div class="ticket-winner__number">
+                    <t t-esc="rifa.winning_number"/>
+                </div>
+                <div class="ticket-winner__details">
+                    <p>Ganador: <strong>
+                        <t t-esc="rifa.winning_ticket_id.client_id.name"/>
+                    </strong></p>
+                    <p>Fecha del Sorteo: 
+                        <t t-esc="rifa.date_end"/>
+                    </p>
+                </div>
 
-            <t t-call="rifas.rifas_payment_methods"/>
+            </section>
+            <!-- <t t-call="rifas.rifas_payment_methods"/> -->
             <t t-call="rifas.rifas_faq"/>
         </t>
     </template>

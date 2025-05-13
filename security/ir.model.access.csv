@@ -6,3 +6,4 @@ access_rifas_payment,access.rifas.payment,model_rifas_payment,base.group_user,1,
 access_rifas_sale_order,access.rifas.sale_order,model_rifas_sale_order,base.group_user,1,1,1,1
 access_rifas_payment_method,access.rifas.payment.method,model_rifas_payment_method,base.group_user,1,1,1,1
 access_rifas_client,access.rifas.client,model_rifas_client,base.group_user,1,1,1,1
+access_rifas_winner,access.rifas.winner.wizard,model_rifas_winner_wizard,base.group_user,1,1,1,1

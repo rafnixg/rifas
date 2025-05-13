@@ -62,6 +62,7 @@
                         </page>
                     </notebook>
                 </sheet>
+                <chatter open_attachments="True"/>
             </form>
         </field>
     </record>

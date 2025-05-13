@@ -99,3 +99,35 @@
     gap: 2rem;
     margin-bottom: 1rem;
 }
+
+/* Ticket Winner Section */
+.ticket-winner {
+    background: #fffbe6;
+    border: 2px solid #ffe066;
+    border-radius: 8px;
+    padding: 2rem 1rem;
+    margin: 2rem auto;
+    max-width: 600px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(255, 224, 102, 0.15);
+}
+
+.ticket-winner__title {
+    font-size: 2rem;
+    color: #ffb300;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.ticket-winner__number {
+    font-size: 2.5rem;
+    color: #0056ff;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.ticket-winner__details {
+    font-size: 1.1rem;
+    color: #388e3c;
+    font-weight: 500;
+}

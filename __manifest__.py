@@ -10,8 +10,7 @@
     "category": "Website",
     "depends": [
         "base",
-        # "website",
-        # "mail"
+        "mail"
     ],    "data": [
         "security/ir.model.access.csv",
         "views/payment_views.xml",
@@ -23,6 +22,7 @@
         "views/website/raffle_template.xml", 
         "views/website/checkout_template.xml",
         "views/website/confirmation_template.xml",
+        "wizards/raffle_winner_views.xml",
         "data/mail_templates.xml",
         "data/ir.sequence.xml",
     ],
