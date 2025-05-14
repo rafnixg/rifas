@@ -45,9 +45,4 @@
         </field>
     </record>
 
-    <!-- Menú principal Rifas -->
-    <menuitem id="menu_rifas_root" name="Rifas"/>
-
-    <!-- Menú de clientes -->
-    <menuitem id="menu_rifas_clientes" name="Clientes" parent="menu_rifas_root" action="action_client_tree" sequence="10"/>
 </odoo>

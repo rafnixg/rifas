@@ -97,8 +97,4 @@
     </record>
 
 </data>
-    <menuitem id="menu_payment" name="Pagos" parent="menu_rifas_rifa" action="action_payment" sequence="30"/>
-
-<menuitem id="menu_payment_method" name="Métodos de Pago" parent="menu_rifas_rifa" action="action_payment_method" sequence="50"/>
-
 </odoo>

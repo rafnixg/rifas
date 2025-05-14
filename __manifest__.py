@@ -18,6 +18,7 @@
         "views/sale_order_views.xml",
         "views/ticket_views.xml",
         "views/client_views.xml",
+        "views/menu_items.xml",
         "views/website/components.xml",
         "views/website/home_template.xml",
         "views/website/validate_template.xml",

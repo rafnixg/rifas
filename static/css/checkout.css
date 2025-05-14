@@ -205,11 +205,14 @@
 }
 
 .badge {
-    display: inline-block;
+    display: inline-flex;
     padding: 4px 8px;
     font-size: 12px;
     border-radius: 4px;
     font-weight: bold;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
 }
 
 .text-bg-warning {

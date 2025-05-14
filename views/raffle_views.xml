@@ -107,8 +107,5 @@
     </record>
 
 </data>
-<menuitem id="menu_rifas_root" name="Rifas" sequence="10"/>
-<menuitem id="menu_rifas_rifa" name="Gestión de Rifas" parent="menu_rifas_root" sequence="10"/>
-<menuitem id="menu_rifas_rifa_items" name="Rifas" parent="menu_rifas_rifa" action="action_rifa" sequence="10"/>
 
 </odoo>

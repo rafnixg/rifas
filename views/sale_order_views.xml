@@ -73,5 +73,4 @@
         <field name="view_mode">list,form</field>
     </record>
 
-    <menuitem id="menu_sale_order" name="Órdenes de Venta" parent="menu_rifas_rifa" action="action_sale_order" sequence="40"/>
 </odoo>

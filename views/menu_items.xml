@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menú principal Rifas -->
+    <menuitem id="menu_rifas_root" name="Rifas"/>
+    <menuitem id="menu_rifas_rifa" name="Gestión de Rifas" parent="menu_rifas_root" sequence="10"/>
+    <menuitem id="menu_rifas_ventas" name="Gestión de Ventas" parent="menu_rifas_root" sequence="20"/>
+
+    <!-- Menú de rifas (Gestión de Rifas) -->
+    <menuitem id="menu_rifas_rifa_items" name="Rifas" parent="menu_rifas_rifa" action="action_rifa" sequence="10"/>
+
+    <!-- Menú de tickets (Gestión de Rifas)-->
+    <menuitem id="menu_ticket" name="Boletos" parent="menu_rifas_rifa" action="action_ticket" sequence="20"/>
+
+    <!-- Menú de clientes -->
+    <menuitem id="menu_rifas_clientes" name="Clientes" parent="menu_rifas_root" action="action_client_tree" sequence="10"/>
+
+    <!-- Menú de órdenes de venta (Gestión de Ventas)-->
+    <menuitem id="menu_sale_order" name="Órdenes de Venta" parent="menu_rifas_ventas" action="action_sale_order" sequence="20"/>
+
+    <!-- Menú de pagos (Gestión de Ventas)-->
+    <menuitem id="menu_payment" name="Pagos" parent="menu_rifas_ventas" action="action_payment" sequence="30"/>
+
+    <!-- Menú de métodos de pago (Gestión de Ventas)-->
+    <menuitem id="menu_payment_method" name="Métodos de Pago" parent="menu_rifas_ventas" action="action_payment_method" sequence="50"/>
+
+</odoo>
