@@ -127,7 +127,7 @@ class Rifa(models.Model):
         This method computes the slug for the raffle based on its name.
         """
         for record in self:
-            record.slug = _slugify(record.name)
+            record.slug = _slugify(record.name) + "-" + str(record.id)
 
     @api.depends("slug")
     def _compute_slug_url(self):

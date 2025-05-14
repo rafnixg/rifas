@@ -6,7 +6,7 @@
             <t t-set="title">WebbyRifas - Inicio</t>
             <!-- Include home-specific CSS -->
             <t t-set-slot="head">
-                <link rel="stylesheet" href="/rifas/static/css/home.css"/>
+                <link rel="stylesheet" href="/rifas/static/css/home.css?v=1.1.0"/>
             </t>
             <!-- Set rifas variable to the first rifa -->
             <t t-set="rifa" t-value="rifas[0]"/>

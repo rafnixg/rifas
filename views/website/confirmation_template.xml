@@ -7,7 +7,7 @@
             
             <!-- Include confirmation-specific CSS -->
             <t t-set-slot="head">
-                <link rel="stylesheet" href="/rifas/static/css/checkout.css?v1.0.2"/>
+                <link rel="stylesheet" href="/rifas/static/css/checkout.css?v=1.1.0"/>
             </t>
             
             <div class="checkout-container">

@@ -17,10 +17,13 @@
 }
 
 .hero__image {
-    width: 200px;
-    height: 200px;
-    background: #ccc;
-    border-radius: 50%;
+    max-width: 50%;
+}
+
+@media (max-width: 900px) {
+    .hero__image {
+        max-width: 100%;
+    }
 }
 
 .hero__feature_image img{

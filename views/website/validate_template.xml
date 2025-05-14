@@ -7,7 +7,7 @@
             <t t-set="title">Validación de Orden - WebbyRifas</t>
 
             <t t-set-slot="head">
-                <link rel="stylesheet" href="/rifas/static/css/checkout.css?v=1.0.1"/>
+                <link rel="stylesheet" href="/rifas/static/css/checkout.css?v=1.1.0"/>
             </t>
             
             <div class="checkout-container">
@@ -27,14 +27,14 @@
                             <p><strong>Rifa:</strong> <t t-esc="order.rifa_id.name"/></p>
                             <p><strong>Fecha:</strong> <t t-esc="order.rifa_id.date_end" t-options="{'widget': 'date'}"/></p>
                         </div>
+                        <div class="ticket-summary">
+                        <h4>Tus Números</h4>
+                        <div class="ticket-numbers">
                         <t t-foreach="order.ticket_ids" t-as="ticket">
-                            <div class="ticket-summary">
-                                <h4>Tus Números</h4>
-                                <div class="ticket-numbers">
-                                    <span class="ticket-number"><t t-esc="ticket.number"/></span>
-                                </div>
-                            </div>
+                            <span class="ticket-number"><t t-esc="ticket.number"/></span>
                         </t>
+                        </div>
+                        </div>
                         <div class="payment-summary">
                             <h4>Resumen de Pago</h4>
                             <p><strong>Total:</strong> <t t-esc="order.amount"/> $</p>
@@ -52,7 +52,7 @@
             <t t-set="title">Validación de Orden - WebbyRifas</t>
 
             <t t-set-slot="head">
-                <link rel="stylesheet" href="/rifas/static/css/checkout.css?v=1.0.0"/>
+                <link rel="stylesheet" href="/rifas/static/css/checkout.css?v=1.1.0"/>
             </t>
             
             <div class="checkout-container">

@@ -4,7 +4,7 @@
         <t t-call="rifas.rifas_layout">
             <t t-set="title">Checkout - WebbyRifas</t>            <!-- Include checkout-specific CSS -->
             <t t-set-slot="head">
-                <link rel="stylesheet" href="/rifas/static/css/checkout.css"/>
+                <link rel="stylesheet" href="/rifas/static/css/checkout.css?v=1.1.0"/>
             </t>
             
             <div class="checkout-container">

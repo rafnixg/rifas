@@ -6,7 +6,7 @@
             <t t-set="title" t-value="rifa.name + ' - WebbyRifas'"/>
             <!-- Include raffle-specific CSS -->
             <t t-set-slot="head">
-                <link rel="stylesheet" href="/rifas/static/css/raffle.css?v=1.0.0"/>
+                <link rel="stylesheet" href="/rifas/static/css/raffle.css?v=1.1.0"/>
             </t>
             <!-- Include hero component -->
             <section class="hero">

@@ -175,7 +175,7 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <title><t t-esc="title or 'WebbyRifas'"/></title>
                 <!-- Load CSS -->
-                <link rel="stylesheet" href="/rifas/static/css/global.css"/>
+                <link rel="stylesheet" href="/rifas/static/css/global.css?v=1.1.0"/>
                 <!-- Optional jQuery for convenience -->
                 <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"/>
                 <!-- Load vanilla JS -->
