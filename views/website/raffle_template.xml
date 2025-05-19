@@ -5,26 +5,22 @@
             <!-- Set the title for the page -->
             <t t-set="title" t-value="rifa.name + ' - WebbyRifas'"/>
             <!-- Include raffle-specific CSS -->
-            <t t-set-slot="head">
-                <link rel="stylesheet" href="/rifas/static/css/raffle.css?v=1.1.0"/>
+            <t t-set="css_styles">
+                <link rel="stylesheet" href="/rifas/static/css/raffle.css?v=1.2.0"/>
             </t>
             <!-- Include hero component -->
             <section class="hero">
                 <div class="hero__container">
-                    <div class="hero__feature_image">
-                        <img t-att-src="rifa.image_feature_url" alt="Imagen de la rifa"/>
-                    </div>
+                    <img t-att-src="rifa.image_feature_url" alt="Imagen de la rifa" class="hero__image"/>
                     <div class="hero__content">
-                        <span class="hero__price">
-                            <t t-esc="rifa.price"/>
-                            $ EL TICKET</span>
                         <h1 class="hero__title">
                             <t t-esc="rifa.name"/>
                         </h1>
                         <div class="hero__description">
                             <t t-esc="rifa.description"/>
                         </div>
-                    </div>                </div>
+                    </div>
+                </div>
             </section>
             <!-- Include gallery component -->
             <t t-call="rifas.rifas_gallery">
@@ -40,7 +36,13 @@
                 <t t-set="rifa" t-value="rifa"/>
             </t>
             <!-- Include faq component -->
-            <t t-call="rifas.rifas_faq"/>
+            <t t-call="rifas.rifas_faq">
+                <t t-set="cta" t-value="0"/>
+            </t>
+
+            <t t-set="js_scripts">
+                <script src="/rifas/static/js/raffle.js?v=1.3.0" type="text/javascript"></script>
+            </t>
         </t>
     </template>
 </odoo>

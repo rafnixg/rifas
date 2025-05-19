@@ -10,6 +10,7 @@ STATE_SALE_ORDER = [
 class SaleOrder(models.Model):
     _name = "rifas.sale_order"
     _description = "Orden de Venta"
+    _order = "create_date desc"
     _inherit = ["mail.thread", "mail.activity.mixin"]
 
     name = fields.Char(string="Referencia")
@@ -164,7 +165,6 @@ class SaleOrder(models.Model):
                 template.with_context(order=self).with_company(self.env.company).send_mail(
                     self.id, force_send=True, email_values={
                         "email_to": self.client_id.email,
-                        "email_from": "me@rafnixg.dev"
                         }
                 )
         except Exception as e:

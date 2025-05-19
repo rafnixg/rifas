@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import base64
 
 from odoo import http, _
 from odoo.http import request
@@ -86,6 +87,9 @@ class RifasCheckout(http.Controller):
         if not raffle.exists():
             return request.redirect("/rifas")
 
+        # Get payment_image from post data
+        payment_image = request.httprequest.files.get("payment_image")
+            
         # Get selected tickets from post data
         selected_tickets = self._get_selected_tickets(raffle, post)
         if not selected_tickets:
@@ -151,6 +155,7 @@ class RifasCheckout(http.Controller):
                 int(post.get("payment_method")) if post.get("payment_method") else False
             ),
             "reference": post.get("payment_reference", ""),
+            "reference_image": base64.b64encode(payment_image.read())	
             # 'notes': post.get('payment_notes', ''),
         }
         payment = request.env["rifas.payment"].sudo().create(payment_values)

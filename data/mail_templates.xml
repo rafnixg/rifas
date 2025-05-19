@@ -65,7 +65,7 @@
                             {% endif %} -->
                             
                             <p>Puedes ver el estado de tu orden en cualquier momento visitando nuestro sitio web.</p>
-                            <p>Codigo de validación: <strong><t t-out="object.validation_code"/></strong></p>
+                            <p>Codigo de validación: <strong><a t-att-href="'/rifas/validate?validation_code=%s' % object.validation_code" style="color: #0056ff"><t t-out="object.validation_code"/></a></strong></p>
                             <p>Recuerda que el sorteo se llevará a cabo el <strong><t t-out="object.rifa_id.date_end" t-options="{'widget': 'date'}"/></strong>.</p>
                             <p>¡Mucha suerte!</p>
                         </td>
@@ -84,7 +84,6 @@
 </div>
             </field>
             <!-- <field name="lang">{{ object.client_id.lang }}</field> -->
-            <field name="auto_delete" eval="True"/>
         </record>
         <!-- Email template for order email_template_winner_notification -->
         <record id="email_template_winner_notification" model="mail.template">
@@ -126,7 +125,75 @@
 </div>
             </field>
             <!-- <field name="lang">{{ object.client_id.lang }}</field> -->
-            <field name="auto_delete" eval="True"/>
         </record>
+
+        <!-- Email template for payment confirmation notification-->
+        <record id="email_template_payment_approved" model="mail.template">
+            <field name="name">Rifas: Notificación de Pago</field>
+            <field name="model_id" ref="model_rifas_sale_order"/>
+            <field name="subject">Confirmación de Pago - Orden #{{ object.name }}</field>
+            <field name="email_from">{{ object.client_id.partner_id.company_id.default_from_email }}</field>
+            <field name="email_to">{{ object.client_id.email }}</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px; font-family: Arial, Helvetica, sans-serif; color: #444444;">
+    <table width="100%" style="background-color: #f9f9f9; padding: 20px;">
+        <tr>
+            <td align="center">
+                <table style="background-color: white; padding: 20px; max-width: 600px; width: 100%; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <tr>
+                        <td align="center" style="padding-bottom: 10px; border-bottom: 1px solid #ddd;">
+                            <h2 style="color: #0056ff; margin: 0;">Confirmación de Pago</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 20px 0;">
+                            <p>Hola <strong><t t-out="object.client_id.name"/></strong>,</p>
+                            <p>Tu pago para la orden "<strong><t t-out="object.name"/></strong>" ha sido confirmado.</p>
+                            <p>Detalles de la Orden:</p>
+                            <div style="margin: 15px 0; text-align: center;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr style="background-color: #f5f5f5;">
+                                        <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Número</th>
+                                        <th style="padding: 8px; border: 1px solid #ddd; text-align: right;">Precio</th>
+                                    </tr>
+                                    <t t-foreach="object.ticket_ids" t-as="ticket">
+                                    <tr>
+                                        <td style="padding: 8px; border: 1px solid #ddd;">
+                                            <t t-out="ticket.number"/>
+                                        </td>
+                                        <td style="padding: 8px; border: 1px solid #ddd; text-align: right;">
+                                            <t t-out="object.rifa_id.price"/> $
+                                        </td>
+                                    </tr>
+                                    </t>
+                                    <tr style="font-weight: bold;">
+                                        <td style="padding: 8px; border: 1px solid #ddd;">Total:</td>
+                                        <td style="padding: 8px; border: 1px solid #ddd; text-align: right;"><t t-out="object.amount"/> $</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <p>Codigo de validación: <strong><a t-att-href="'/rifas/validate?validation_code=%s' % object.validation_code" style="color: #0056ff"><t t-out="object.validation_code"/></a></strong></p>
+                            <p>Recuerda que el sorteo se llevará a cabo el <strong><t t-out="object.rifa_id.date_end" t-options="{'widget': 'date'}"/></strong>.</p>
+                            <p>¡Mucha suerte!</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" style="padding-top: 20px; border-top: 1px solid #ddd;">
+                            <p style="font-size: 12px; color: #888888;">
+                                © 2025 WebbyRifas. Todos los derechos reservados.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+            </field>
+            <!-- <field name="lang">{{ object.client_id.lang }}</field> -->
+        </record>
+        
+
+
     </data>
 </odoo>

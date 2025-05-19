@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
 
@@ -8,12 +8,32 @@ class PaymentMethod(models.Model):
 
     name = fields.Char(required=True)
     description = fields.Text()
+    image = fields.Binary("Imagen")
+    logo_url = fields.Char(
+        string="URL de la Imagen",
+        compute="_compute_logo_url",
+        store=True,
+    )
     is_active = fields.Boolean(default=True)
+
+
+    @api.depends("image")
+    def _compute_logo_url(self):
+        """
+        This method computes the URL for the logo image.
+        """
+        for record in self:
+            if record.image:
+                record.logo_url = f"/payment_method/{record.id}"
+            else:
+                record.logo_url = False
+
 
 
 class Payment(models.Model):
     _name = "rifas.payment"
     _description = "Pago"
+    _order = "date desc"
 
     name = fields.Char(
         string="Serie",
@@ -40,7 +60,9 @@ class Payment(models.Model):
         required=True,
     )
     client_id = fields.Many2one("rifas.client", string="Cliente")
-    partner_id = fields.Many2one("res.partner", string="Socio", related="client_id.partner_id")
+    partner_id = fields.Many2one(
+        "res.partner", string="Socio", related="client_id.partner_id"
+    )
     rifa_id = fields.Many2one("rifas.raffle", string="Rifa")
     sale_order_id = fields.Many2one("rifas.sale_order", string="Orden de Venta")
 
@@ -77,7 +99,36 @@ class Payment(models.Model):
         self.state = "approve"
         self.sale_order_id.state = "done"
         self.sale_order_id.ticket_ids.write({"state": "approve"})
+        # send email to client
+        self._send_email_approved()
         return True
+
+    def _send_email_approved(self):
+        """
+        This method sends an email to the client when the payment is approved.
+        """
+        template = self.env.ref("rifas.email_template_payment_approved")
+        if template:
+            try:
+                template.with_context(order=self.sale_order_id).send_mail(
+                    self.sale_order_id.id,
+                    force_send=True,
+                    email_values={
+                        "email_to": self.client_id.email
+                })
+            except Exception as e:
+                self.env["ir.logging"].create(
+                {
+                    "name": "Rifas Order Email",
+                    "type": "server",
+                    "dbname": self._cr.dbname,
+                    "level": "error",
+                    "message": str(e),
+                    "path": __file__,
+                    "func": "_send_email_approved",
+                    "line": 0,
+                }
+            )
 
     def action_cancel(self):
         """

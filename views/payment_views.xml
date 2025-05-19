@@ -82,6 +82,8 @@
                 <sheet>
                     <group>
                         <field name="name"/>
+                        <field name="image" widget="image" string="Logo"/>
+                        <field name="logo_url" invisible="1"/>
                         <field name="description"/>
                         <field name="is_active"/>
                     </group>

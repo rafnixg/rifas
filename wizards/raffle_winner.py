@@ -127,6 +127,5 @@ class RifasWinner(models.TransientModel):
             force_send=True,
             email_values={
                 "email_to": winning_ticket.client_id.email,
-                "email_from": "me@rafnixg.dev",
             },
         )

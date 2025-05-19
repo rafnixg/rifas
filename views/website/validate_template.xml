@@ -6,8 +6,8 @@
         <t t-call="rifas.rifas_layout">
             <t t-set="title">Validación de Orden - WebbyRifas</t>
 
-            <t t-set-slot="head">
-                <link rel="stylesheet" href="/rifas/static/css/checkout.css?v=1.1.0"/>
+            <t t-set="css_styles">
+                <link rel="stylesheet" href="/rifas/static/css/checkout.css?v=1.3.0"/>
             </t>
             
             <div class="checkout-container">
@@ -43,6 +43,9 @@
                     </div>
                 </div>
             </div>
+            <t t-set="js_scripts">
+                <script src="/rifas/static/js/checkout.js?v=1.3.0" type="text/javascript"></script>
+            </t>
         </t>
 
      </template>
@@ -51,8 +54,8 @@
         <t t-call="rifas.rifas_layout">
             <t t-set="title">Validación de Orden - WebbyRifas</t>
 
-            <t t-set-slot="head">
-                <link rel="stylesheet" href="/rifas/static/css/checkout.css?v=1.1.0"/>
+            <t t-set="css_styles">
+                <link rel="stylesheet" href="/rifas/static/css/checkout.css?v=1.3.0"/>
             </t>
             
             <div class="checkout-container">
@@ -76,10 +79,9 @@
                     </div>
                 </div>
             </div>
+            <t t-set="js_scripts">
+                <script src="/rifas/static/js/checkout.js?v=1.3.0" type="text/javascript"></script>
+            </t>
         </t>
-
-
-
      </template>
-
 </odoo>

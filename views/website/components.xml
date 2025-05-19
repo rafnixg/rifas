@@ -36,7 +36,8 @@
             <div class="payment__methods">
                 <t t-foreach="payments_method" t-as="method">
                     <span class="payment__method">
-                        <t t-esc="method.name"/>
+                        <img t-att-src="method.logo_url" alt="Logo de la forma de pago" class="paymen__method__image"/>
+                        <!-- <t t-esc="method.name"/> -->
                     </span>
                 </t>
             </div>
@@ -55,6 +56,10 @@
                     </t>
                 </div>
             </section>
+            <div id="imageModal" class="modal">
+                <span class="modal__close">X</span>
+                <img class="modal__content" id="modalImage"/>
+            </div>
         </t>
     </template>
 
@@ -107,7 +112,7 @@
                     <p>Respuesta...</p>
                 </details>
             </div>
-            <t t-if="rifa.state == 'publish'">
+            <t t-if="(rifa.state == 'publish' and  cta)">
                 <a t-att-href="rifa.slug_url" class="button">Comprar Ticket</a>
             </t>
         </section>
@@ -123,32 +128,36 @@
      </template>
 
     <!-- Ticket Selector Component -->
-     <template id="rifas_ticket_selector" name="Rifas Ticket Selector">
-        <section class="ticket-selector" t-att-data-raffle-id="rifa.id" t-att-data-price="rifa.price">
-            <div class="ticket-selector__stats">
-                <span>Tickets Disponibles: <strong>
-                    <t t-esc="rifa.ticket_available"/>
-                </strong></span>
-                <span>Tickets Vendidos: <strong>
-                    <t t-esc="rifa.ticket_sold"/>
-                </strong></span>
-            </div>
-            <h2 class="ticket-selector__title">Seleccione los números a comprar</h2>
-            <div class="ticket-selector__grid">
-                <t t-foreach="tickets_disponibles" t-as="disponible">
-                    <button class="ticket-selector__number" 
-                            t-att-data-number="disponible['number']">
-                        <t t-esc="disponible['number']"/>
-                    </button>
-                </t>
-            </div>
-            <div class="ticket-selector__summary">
-                <p>Tickets: <span id="ticket-count">0</span></p>
-                <p>Total: $<span id="ticket-total">0.00</span></p>
-            </div>
-            <button class="button button-checkout" disabled="disabled">Comprar Tickets</button>
-        </section>
-     </template>
+    <template id="rifas_ticket_selector" name="Rifas Ticket Selector">
+    <section class="ticket-selector" t-att-data-raffle-id="rifa.id" t-att-data-price="rifa.price">
+        <div class="ticket-selector__stats">
+            <span>Tickets Disponibles: <strong>
+                <t t-esc="rifa.ticket_available"/>
+            </strong></span>
+            <span>Precio del Ticket: <strong>
+                <t t-esc="rifa.price"/> $
+            </strong></span>
+            <span>Tickets Vendidos: <strong>
+                <t t-esc="rifa.ticket_sold"/>
+            </strong></span>
+        </div>
+        <h2 class="ticket-selector__title">Seleccione los números a comprar</h2>
+        <div class="ticket-selector__grid">
+            <t t-foreach="tickets_disponibles" t-as="disponible">
+                <button class="ticket-selector__number" 
+                        t-att-data-number="disponible['number']">
+                    <t t-esc="disponible['number']"/>
+                </button>
+            </t>
+        </div>
+        <div class="ticket-selector__summary">
+            <p>Tickets: <span id="ticket-count">0</span></p>
+            <p>Total: $<span id="ticket-total">0.00</span></p>
+        </div>
+        <button class="button button-checkout" disabled="disabled">Comprar Tickets</button>
+    </section>
+    </template>
+
     <!-- Ticket Winner Component -->
     <template id="rifas_ticket_winner" name="Rifas Ticket Winner">
         <section class="ticket-winner">
@@ -167,6 +176,7 @@
 
             </section>
     </template>
+
     <!-- Base Template with standalone structure -->
     <template id="rifas_layout" name="Rifas Layout">
         <html lang="es">
@@ -175,12 +185,8 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <title><t t-esc="title or 'WebbyRifas'"/></title>
                 <!-- Load CSS -->
-                <link rel="stylesheet" href="/rifas/static/css/global.css?v=1.1.0"/>
-                <!-- Optional jQuery for convenience -->
-                <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"/>
-                <!-- Load vanilla JS -->
-                <script type="text/javascript" src="/rifas/static/js/raffle.js"/>
-                <script type="text/javascript" src="/rifas/static/js/checkout.js"/>
+                <link rel="stylesheet" href="/rifas/static/css/global.css?v=1.3.1"/>
+                <t t-out="css_styles"/>
             </head>
             <body>
                 <t t-call="rifas.rifas_header"/>
@@ -188,6 +194,8 @@
                     <t t-raw="0"/>
                 </main>
                 <t t-call="rifas.rifas_footer"/>
+                <t t-out="js_scripts"/>
+                <script src="/rifas/static/js/global.js?v=1.3.1"></script>
             </body>
         </html>
     </template>

@@ -1,5 +1,18 @@
 /* Global styles shared between all rifas pages */
 
+/* Variables */
+:root {
+    --white: #f9f9f9;
+    --black: #333;
+    --gray: #ddd;
+    --primary-color: #0056ff;
+    --secondary-color: #f1f1f1;
+    --text-color: #333;
+    --background-color: #f9f9f9;
+    --title-color: #333;
+}
+
+
 /* Reset básico */
 * {
     margin: 0;
@@ -9,18 +22,29 @@
 
 body {
     font-family: sans-serif;
-    background-color: #f9f9f9;
-    color: #333;
+    background-color: var(--background-color);
+    color: var(--text-color);
     line-height: 1.6;
 }
 
 /* Utilidades */
+
+.mt-4 {
+    margin-top: 20px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+
 .button {
-    background-color: #0056ff;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--white);
+    font-size: 1rem;
+    font-weight: bold;
     padding: 0.6rem 1.2rem;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
     margin-top: 1rem;
     display: inline-block;
@@ -29,9 +53,9 @@ body {
 
 /* Header */
 .header {
-    background: white;
+    background: var(--background-color);
     padding: 1rem;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--gray);
 }
 
 .header__container {
@@ -53,36 +77,122 @@ body {
 }
 .header__nav a {
     text-decoration: none;
-    color: #333;
+    color: var(--text-color);
     margin: 0 1rem;
+    font-weight: bold;
 }
 
+/* Hero */
+.hero {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    padding-bottom: 0;
+    background: var(--secondary-color);
+}
+
+.hero__container {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.hero__image {
+    max-width: 50%;
+}
+
+@media (max-width: 900px) {
+    .hero__image {
+        max-width: 100%;
+    }
+}
+
+.hero__feature_image img{
+    width: 100%;
+}
+
+.hero__content {
+    max-width: 500px;
+}
+
+.hero__title {
+    font-size: 1.8rem;
+}
+
+.hero__list {
+    list-style: disc;
+    margin-left: 1.2rem;
+}
+
+
 /* Gallery */
+.gallery {
+   padding: 2rem;
+   background: var(--secondary-color);
+}
 .gallery__container {
     display: flex;
     justify-content: center;
     gap: 1rem;
-    padding: 1rem;
-    background: white;
 }
 
 .gallery__item {
     width: auto;
     height: 140px;
+    cursor: pointer;
 }
 
 .gallery__item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 8px;
 }
 
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    padding-top: 60px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.9);
+}
+
+.modal__content {
+    display: block;
+    margin: auto;
+    max-width: 90%;
+    max-height: 80%;
+}
+
+.modal__close {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: var(--white);
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+
+/* Call to action */
+.cta {
+    text-align: center;
+    padding: 2rem 1rem;
+    background: var(--secondary-color);
+}
 
 /* Payment */
 .payment {
     text-align: center;
     padding: 2rem 1rem;
+    background: var(--background-color);
 }
 
 .payment__methods {
@@ -91,23 +201,59 @@ body {
     flex-wrap: wrap;
     gap: 1rem;
     margin-top: 1rem;
+    flex-direction: row;
+    align-items: center;
 }
 
 .payment__method {
-    background: #eee;
     padding: 0.5rem 1rem;
-    border-radius: 5px;
+    max-width: 200px;
+}
+
+.paymen__method__image{
+    width: 100%;
+
+}
+
+
+/* Raffles */
+.raffles {
+    padding: 2rem 1rem;
+    background: var(--background-color);
+    text-align: center;
+}
+
+.raffles__list {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.raffle-card {
+    background: var(--background-color);
+    padding: 1rem;
+    width: 280px;
+    box-shadow: inset 0px 0px 14px -4px var(--gray);
+}
+
+.raffle-card__image {
+    width: 100%;
+    height: 150px;
+    background: var(--gray);
+    margin-bottom: 1rem;
 }
 
 /* FAQ */
 .faq {
-    background: #eaf2ff;
+    background: var(--secondary-color);
     padding: 2rem 1rem;
     text-align: center;
 }
 
 .faq__list {
-    max-width: 600px;
+    max-width: max-content;
     margin: 1rem auto;
     text-align: left;
 }
@@ -127,14 +273,248 @@ body {
 
 /* Footer */
 .footer {
-    background: #333;
-    color: white;
+    background: var(--black);
+    color: var(--white);
     text-align: center;
     padding: 1rem;
 }
 
 .footer__nav a {
-    color: white;
+    color: var(--white);
     text-decoration: none;
     margin: 0 0.5rem;
+}
+
+
+/* Ticket Selector */
+.ticket-selector {
+    background: var(--background-color);
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+.ticket-selector__stats {
+    display: flex;
+    justify-content: space-between;
+    max-width: 600px;
+    margin: 0 auto 1rem auto;
+}
+
+.ticket-selector__title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.ticket-selector__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+    gap: 0.5rem;
+    max-height: 300px;
+    max-width: 600px;
+    margin: 0 auto;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+
+.ticket-selector__number {
+    padding: 0.5rem;
+    background: var(--white);
+    border:none;
+    cursor: pointer;
+    box-shadow: inset 0px 0px 14px -8px var(--primary-color);
+}
+
+.ticket-selector__number:hover {
+    background-color: #d0e3ff;
+}
+
+.ticket-selector__number.selected {
+    background-color: #0056ff;
+    color: white;
+    border-color: #0040c0;
+}
+
+.ticket-selector__summary {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1rem;
+}
+
+/* Form */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form-section {
+    margin-bottom: 20px;
+}
+
+.form-section h3 {
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: #555;
+}
+
+.form-section .form-row {
+    margin-bottom: 15px;
+}
+
+.form-section .form-row label {
+    display: block;
+    margin-bottom: 5px;
+    color: #666;
+    font-size: 14px;
+}
+
+.form-section .form-row input,
+.form-section .form-row select,
+.form-section .form-row textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.form-section .form-row textarea {
+    resize: vertical;
+}
+
+.form-section .checkbox-container {
+    display: flex;
+    align-items: center;
+}
+
+.form-section .checkbox-container input {
+    width: auto;
+    margin-right: 8px;
+}
+
+.form-section .checkbox-container label {
+    margin-bottom: 0;
+}
+
+.form-section .payment-info {
+    margin: 15px 0;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+.form-section .payment-method-details {
+    margin-bottom: 10px;
+}
+
+.form-section .account-info {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-left: 3px solid #0056ff;
+}
+
+.form-section .form-submit {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.form-section .form-submit .button {
+    padding: 10px 25px;
+}
+
+/* Alert */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+}
+.alert.alert-success {
+    background-color: #e7f7ed;
+    color: #1c7943;
+}
+
+.alert.alert-danger {
+    background-color: #f9e7e7;
+    color: #b94a48;
+}
+
+/* Badge */
+.badge {
+    display: inline-flex;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.badge.text-bg-warning {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+.badge.text-bg-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+.badge.text-bg-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Order Summary */
+.order-summary {
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.order-summary h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    justify-content: space-between;
+    display: flex;
+}
+
+
+.order-details {
+    margin-bottom: 15px;
+}
+
+.order-details p {
+    margin-bottom: 5px;
+}
+
+/* Ticket Summary */
+
+.ticket-summary h4 {
+    font-size: 16px;
+    margin: 15px 0;
+    color: #444;
+}
+
+.ticket-summary .ticket-numbers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.ticket-summary .ticket-number {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #f0f7ff;
+    border: 1px solid #d0e3ff;
+    font-weight: bold;
+    color: #0056ff;
 }

@@ -5,6 +5,7 @@ from odoo.exceptions import ValidationError
 class Ticket(models.Model):
     _name = "rifas.ticket"
     _description = "Boleto de Rifa"
+    _order = "create_date desc"
 
     rifa_id = fields.Many2one("rifas.raffle", string="Rifa", required=True)
     number = fields.Char(required=True)

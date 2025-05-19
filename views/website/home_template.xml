@@ -4,10 +4,10 @@
         <t t-call="rifas.rifas_layout">
             <!-- Set the title for the page -->
             <t t-set="title">WebbyRifas - Inicio</t>
-            <!-- Include home-specific CSS -->
-            <t t-set-slot="head">
-                <link rel="stylesheet" href="/rifas/static/css/home.css?v=1.1.0"/>
-            </t>
+            <!-- Include home-specific CSS -->            
+            <!-- <t t-set="css_styles">
+                <link rel="stylesheet" href="/rifas/static/css/home.css?v=1.3.0"/>
+            </t> -->
             <!-- Set rifas variable to the first rifa -->
             <t t-set="rifa" t-value="rifas[0]"/>
             <!-- Include hero component -->
@@ -31,10 +31,6 @@
             <t t-call="rifas.rifas_gallery">
                 <t t-set="image_ids" t-value="rifa.image_ids"/>
             </t>
-            <!-- Include Call to Action component -->
-             <t t-call="rifas.rifas_cta">
-                <t t-set="rifa" t-value="rifa"/>
-            </t>
             <!-- Include payment methods component -->
             <t t-call="rifas.rifas_payment_methods">
                 <t t-set="payments_method" t-value="payments_method"/>
@@ -44,7 +40,9 @@
                 <t t-set="rifas" t-value="rifas"/>
             </t>                
             <!-- Include faq component -->
-            <t t-call="rifas.rifas_faq"/>
+            <t t-call="rifas.rifas_faq">
+                <t t-set="cta" t-value="1"/>
+            </t>
         </t>
     </template>
 </odoo>
