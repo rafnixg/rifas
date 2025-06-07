@@ -5,6 +5,32 @@ Todos los cambios notables en este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere al [Versionado Semántico](https://semver.org/spec/v2.0.0.html).
 
+## [18.0.3.0.0] - 2025-06-07
+
+### ✨ Agregado
+- **Documentación Completa**: Implementación de documentación comprensiva en inglés para todos los modelos, clases y métodos
+- **Estándares de Código**: Adopción de mejores prácticas en la documentación del código siguiendo convenciones de Python y Odoo
+- **Guías Técnicas**: Documentación detallada para desarrolladores que deseen extender o personalizar el módulo
+- **Comentarios Técnicos**: Explicaciones detalladas del flujo de negocio y arquitectura del sistema
+
+### 🔧 Mejorado
+- **Corrección de Errores**: Eliminación completa de errores de sintaxis y mejora en la estructura del código
+- **Optimización de Rendimiento**: Mejoras significativas en el rendimiento y legibilidad del código
+- **Validaciones Mejoradas**: Implementación de mejor manejo de errores y validaciones de datos más robustas
+- **Legibilidad del Código**: Refactorización para mejorar la comprensión y mantenimiento del código
+
+### 📚 Documentación para Desarrolladores
+- **Comprensión del Flujo de Negocio**: Documentación clara de todos los procesos de negocio
+- **Guías de Extensión**: Instrucciones detalladas para personalizar y extender el módulo
+- **Integración con Odoo**: Documentación de integración con otros módulos del ecosistema Odoo
+- **Debugging y Mantenimiento**: Guías para resolución de problemas y mantenimiento del código
+
+### 🐛 Corregido
+- Errores de sintaxis en archivos Python identificados durante la revisión de código
+- Problemas de importación y referencias de módulos
+- Validaciones de datos que causaban errores en tiempo de ejecución
+- Inconsistencias en la nomenclatura de variables y métodos
+
 ## [18.0.2.1.0] - 2025-05-19
 
 ### ✨ Agregado

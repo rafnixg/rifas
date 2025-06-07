@@ -212,18 +212,24 @@ Consulta nuestro [ROADMAP.md](ROADMAP.md) para conocer:
 
 ## 📚 HISTORIAL
 
-### Versión 18.0.2.1.0 (Actual)
-- ✅ Gestión completa de rifas y boletos
-- ✅ Portal web para venta online
-- ✅ Sistema de pagos integrado
-- ✅ Sorteo automático de ganadores
-- ✅ Reportes básicos y notificaciones
+### Versión 18.0.3.0.0 (Actual)
+- ✅ **Documentación Completa**: Todos los modelos, clases y métodos documentados en inglés
+- ✅ **Mejoras Técnicas**: Corrección de errores y optimización del código
+- ✅ **Estándares de Código**: Implementación de mejores prácticas de desarrollo
+- ✅ **Guías para Desarrolladores**: Documentación técnica para extensión del módulo
 
 ### Versiones Anteriores
 
+#### Versión 18.0.2.1.0
+- ✅ Gestión completa de rifas y boletos
+- ✅ Portal web para venta online
+- ✅ Sistema de pagos integrado
+- ✅ Sorteo manual controlado de ganadores
+- ✅ Reportes básicos y notificaciones
+
 Para el historial completo de cambios, consulta las versiones en el repositorio de GitHub.
 
-## 📋 NOVEDADES EN VERSIÓN 3.0.0
+## 📋 NOVEDADES EN VERSIÓN 18.0.3.0.0
 
 ### 🆕 Mejoras en Documentación
 - **Documentación Completa**: Todos los modelos, clases y métodos ahora cuentan con documentación comprensiva en inglés
@@ -236,7 +242,7 @@ Para el historial completo de cambios, consulta las versiones en el repositorio 
 - **Validaciones**: Mejor manejo de errores y validaciones de datos
 
 ### 📚 Documentación para Desarrolladores
-La versión 3.0.0 incluye documentación técnica completa que facilita:
+La versión 18.0.3.0.0 incluye documentación técnica completa que facilita:
 - Comprensión del flujo de negocio
 - Extensión y personalización del módulo
 - Integración con otros módulos de Odoo
