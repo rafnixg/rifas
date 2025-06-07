@@ -1,9 +1,12 @@
 {
     "name": "Rifas",
-    "version": "18.0.2.1.0",
+    "version": "18.0.3.0.0",
     "summary": "Gestión de rifas para vertical de sorteos",
     "description": """
         Módulo para la gestión de rifas, sorteos y boletos en Odoo 18.0.
+        
+        Version 3.0.0: Documentación completa en inglés para todos los modelos,
+        clases y métodos. Mejoras en la calidad del código y estructura.
     """,
     "author": "Rafnix Guzman",
     "website": "https://rafnixg.com",

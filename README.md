@@ -1,6 +1,6 @@
 # Rifas - Módulo de Gestión de Rifas para Odoo 18.0
 
-[![Version](https://img.shields.io/badge/version-18.0.2.1.0-blue.svg)](https://github.com/rafnixg/rifas)
+[![Version](https://img.shields.io/badge/version-18.0.3.0.0-blue.svg)](https://github.com/rafnixg/rifas)
 [![License](https://img.shields.io/badge/license-LGPL--3-green.svg)](LICENSE)
 [![Odoo](https://img.shields.io/badge/Odoo-18.0-purple.svg)](https://www.odoo.com/)
 [![Author](https://img.shields.io/badge/author-Rafnix%20Guzman-orange.svg)](https://rafnixg.com)
@@ -222,6 +222,25 @@ Consulta nuestro [ROADMAP.md](ROADMAP.md) para conocer:
 ### Versiones Anteriores
 
 Para el historial completo de cambios, consulta las versiones en el repositorio de GitHub.
+
+## 📋 NOVEDADES EN VERSIÓN 3.0.0
+
+### 🆕 Mejoras en Documentación
+- **Documentación Completa**: Todos los modelos, clases y métodos ahora cuentan con documentación comprensiva en inglés
+- **Estándares de Código**: Implementación de mejores prácticas en la documentación del código
+- **Guías Técnicas**: Documentación detallada para desarrolladores que quieran extender el módulo
+
+### 🔧 Mejoras Técnicas
+- **Corrección de Errores**: Eliminación de errores de sintaxis y mejora en la estructura del código
+- **Optimización**: Mejoras en el rendimiento y legibilidad del código
+- **Validaciones**: Mejor manejo de errores y validaciones de datos
+
+### 📚 Documentación para Desarrolladores
+La versión 3.0.0 incluye documentación técnica completa que facilita:
+- Comprensión del flujo de negocio
+- Extensión y personalización del módulo
+- Integración con otros módulos de Odoo
+- Mantenimiento y debugging
 
 ## 🤝 CONTRIBUIR
 

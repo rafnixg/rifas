@@ -57,7 +57,7 @@ class SaleOrder(models.Model):
         string="Cantidad de Boletos", compute="_compute_ticket_count", store=True
     )
 
-    def _generate_valitadtion_code(self):
+    def _generate_validation_code(self):
         """
         Generate a unique validation code for the sale order.
         
@@ -74,10 +74,10 @@ class SaleOrder(models.Model):
             (str(self.id) + fields.Datetime.now().strftime("%Y%m%d%H%M%S")).encode()
         ).hexdigest()
         validation_code = code[:8]
-        validation_ojb = self.env["rifas.sale_order"].search([("validation_code", "=", validation_code)])
-        if validation_ojb:
+        validation_obj = self.env["rifas.sale_order"].search([("validation_code", "=", validation_code)])
+        if validation_obj:
             # If the code already exists, generate a new one
-            return self._generate_valitadtion_code()
+            return self._generate_validation_code()
         return validation_code
 
     def _check_amount(self):
@@ -128,7 +128,7 @@ class SaleOrder(models.Model):
         name = self.env["ir.sequence"].next_by_code("rifas.sale.order") or "Nuevo"
         vals_list["name"] = name
         # set validation code
-        vals_list["validation_code"] = self._generate_valitadtion_code()
+        vals_list["validation_code"] = self._generate_validation_code()
         order = super(SaleOrder, self).create(vals_list)
         return order
 
@@ -193,22 +193,33 @@ class SaleOrder(models.Model):
         self.state = "cancel"
         # self.ticket_ids.unlink()
         return True
-
     def set_winner(self, number):
         """
-        This method sets a ticket as a winner based on the provided number.
-        It raises a ValueError if no winning ticket is found.
+        Set a specific ticket as winner based on the provided number.
+        
+        Searches for a ticket with the specified number within this order's
+        tickets and marks it as the winner.
+        
+        Args:
+            number (int): The ticket number to mark as winner
+            
+        Raises:
+            ValueError: If no ticket with the provided number is found
         """
         ticket = self.ticket_ids.filtered(lambda t: t.number == number)
         if ticket:
             ticket.set_winner()
         else:
             raise ValueError("No hay boleto ganador.")
-
     def action_view_payment(self):
         """
-        This method is triggered when the user clicks on the payment button.
-        It opens the payment associated with the sale order.
+        Open the payment view associated with this sale order.
+        
+        Returns an action to display the payment form related to this order,
+        pre-populated with order context information.
+        
+        Returns:
+            dict: Action dictionary for opening payment form
         """
         return {
             "name": "Ver Pago",
@@ -223,11 +234,16 @@ class SaleOrder(models.Model):
                 "default_rifa_id": self.rifa_id.id,
             },
         }
-
     def send_email_confirmation(self):
         """
-        This method sends a confirmation email to the client.
-        It uses the email template defined in the rifas module.
+        Send order confirmation email to the client.
+        
+        Uses the predefined email template to send a confirmation email
+        to the client. Logs any errors that occur during the sending process
+        without interrupting the main workflow.
+        
+        Note:
+            Errors are logged but do not stop the order process
         """
         try:
             template = self.env.ref("rifas.email_template_order_confirmation")
