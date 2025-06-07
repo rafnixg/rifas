@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+"""
+Checkout controller for raffle ticket purchases.
+
+This module handles the complete checkout process for raffle tickets,
+including validation, payment processing, and order confirmation.
+"""
 import base64
 
 from odoo import http, _
@@ -7,10 +13,32 @@ from odoo.exceptions import ValidationError
 
 
 class RifasCheckout(http.Controller):
-
+    """
+    Controller for managing the raffle ticket checkout process.
+    
+    This controller handles the complete checkout workflow including:
+    - Ticket availability validation
+        - Customer information collection
+    - Payment processing
+    - Order creation and confirmation
+    - Email notifications
+    """
+    
     def _validate_ticket_availability(self, raffle_id, ticket_ids):
         """
         Validate if the selected tickets are available for purchase.
+        
+        Checks if any of the selected tickets have already been sold for the specified raffle.
+        
+        Args:
+            raffle_id (int): The ID of the raffle to check tickets for
+            ticket_ids (list): List of dictionaries containing ticket information with 'number' key
+            
+        Raises:
+            ValidationError: If any of the selected tickets are already sold/unavailable
+            
+        Note:
+            This method ensures data integrity by preventing double-booking of tickets
         """
         ticket_ids_list = [ticket_id["number"] for ticket_id in ticket_ids]
         tickets = (
@@ -20,10 +48,30 @@ class RifasCheckout(http.Controller):
         )
         if tickets:
             raise ValidationError(_("Some selected tickets are not available."))
-
+    
     def _get_selected_tickets(self, raffle, post):
         """
         Retrieve selected tickets from the session or post data.
+        
+        Processes the ticket_ids from POST data and validates their availability
+        for the specified raffle.
+        
+        Args:
+            raffle (rifas.raffle): The raffle record object
+            post (dict): POST data containing ticket_ids as comma-separated string
+            
+        Returns:
+            list: List of dictionaries containing ticket information with keys:
+                - number (int): Ticket number
+                - raffle_id (int): ID of the raffle
+                - price (float): Price per ticket
+                - raffle_name (str): Name of the raffle
+            or
+            redirect: Redirect response if no tickets selected
+            
+        Note:
+            Automatically validates ticket availability and redirects to raffle page
+            if no valid tickets are selected
         """
         ticket_ids = post.get("ticket_ids", [])
         selected_tickets = [
