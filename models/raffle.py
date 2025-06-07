@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Raffle Model for Rifas Module.
+
+This module contains the main raffle model and related functionality for managing
+lottery-style raffle events, including tickets, images, and associated business logic.
+"""
 import re
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
@@ -5,7 +12,19 @@ from odoo.exceptions import ValidationError
 
 def _slugify(name):
     """
-    This method generates a slug from the given name.
+    Generate a URL-friendly slug from the given name.
+    
+    Converts a text string into a URL-safe slug by removing special characters,
+    replacing spaces with hyphens, and converting to lowercase.
+    
+    Args:
+        name (str): The original name to be converted to a slug
+        
+    Returns:
+        str: URL-friendly slug version of the input name
+        
+    Example:
+        _slugify("My Raffle Name!") -> "my-raffle-name"
     """
     name = re.sub(r"[^a-zA-Z0-9\s-]", "", name)  # Remove special characters
     name = re.sub(r"\s+", "-", name)  # Replace spaces with hyphens
@@ -15,7 +34,18 @@ def _slugify(name):
 
 def _remove_html_tags(html):
     """
-    This method removes HTML tags from the given string.
+    Remove HTML tags from a given HTML string.
+    
+    Strips all HTML markup from the input string, leaving only the text content.
+    
+    Args:
+        html (str): HTML string to clean
+        
+    Returns:
+        str: Plain text without HTML tags
+        
+    Note:
+        Uses regex pattern to match and remove all HTML tags (<...>)
     """
     clean = re.compile("<.*?>")
     return re.sub(clean, "", html)
@@ -23,16 +53,25 @@ def _remove_html_tags(html):
 
 def _get_html_description_default():
     """
-    This method returns the default HTML description for the raffle.
+    Get the default HTML description template for new raffles.
+    
+    Provides a standard HTML template with placeholders for raffle information
+    including event details, prizes, and promotional content.
+    
+    Returns:
+        str: HTML template string with placeholder content
+        
+    Note:
+        Template includes Spanish content as default for the application locale
     """
     return """
         <h1>🎉 ¡Rifa {tu rifa}! 🎉</h1>
 
         <p> ¡No te pierdas la oportunidad de ganar increíbles premios y apoyar una buena causa! </p>
         <ul>
-            <li>🗓 Fecha de la Rifa: [Fecha de la rifa]</li>
-            <li>📍 Lugar: [Ubicación del evento]</li>
-            <li>⏰ Hora: [Hora del evento]</li>
+        <li>🗓 Fecha de la Rifa: [Fecha de la rifa]</li>
+        <li>📍 Lugar: [Ubicación del evento]</li>
+        <li>⏰ Hora: [Hora del evento]</li>
         </ul>
 
         <p><b>Premios:<b></p>
@@ -46,6 +85,12 @@ def _get_html_description_default():
 
 
 class RifaImage(models.Model):
+    """
+    Model for storing raffle-related images.
+    
+    This model handles image storage and URL generation for raffle-related images,
+    providing a centralized way to manage image assets for raffle displays.
+    """
     _name = "rifas.image"
     _description = "Imagen de Rifa"
 
@@ -57,11 +102,27 @@ class RifaImage(models.Model):
 
     @api.depends("image")
     def _compute_image_url(self):
+        """
+        Compute the public URL for accessing the image.
+        
+        Generates a URL path that can be used to serve the image through
+        the web controller endpoint.
+        
+        Note:
+            URL format: /rifas/image/{record_id}
+        """
         for record in self:
             record.image_url = f"/rifas/image/{record.id}"
 
 
 class Rifa(models.Model):
+    """
+    Main raffle model for managing lottery-style events.
+    
+    This model represents a raffle event with all its associated data including
+    tickets, images, sales orders, and business logic for raffle management.
+    Handles the complete lifecycle from draft to finished state.
+    """
     _name = "rifas.raffle"
     _description = "Rifa"
 
@@ -124,7 +185,13 @@ class Rifa(models.Model):
     @api.depends("name")
     def _compute_slug(self):
         """
-        This method computes the slug for the raffle based on its name.
+        Compute the URL slug for the raffle based on its name.
+        
+        Generates a URL-friendly slug by combining the slugified name
+        with the record ID to ensure uniqueness.
+        
+        Note:
+            Format: {slugified_name}-{record_id}
         """
         for record in self:
             record.slug = _slugify(record.name) + "-" + str(record.id)
@@ -132,7 +199,13 @@ class Rifa(models.Model):
     @api.depends("slug")
     def _compute_slug_url(self):
         """
-        This method computes the URL for the raffle based on its slug.
+        Compute the public URL for the raffle based on its slug.
+        
+        Generates the complete URL path that can be used to access
+        the raffle detail page on the website.
+        
+        Note:
+            URL format: /rifas/{slug}
         """
         for record in self:
             record.slug_url = f"/rifas/{record.slug}"
@@ -140,7 +213,13 @@ class Rifa(models.Model):
     @api.depends("image_feature")
     def _compute_image_feature_url(self):
         """
-        This method computes the URL for the main image of the raffle.
+        Compute the public URL for the raffle's main feature image.
+        
+        Generates a URL path that can be used to serve the main image
+        through the web controller endpoint.
+        
+        Note:
+            URL format: /rifas/image_feature/{record_id}
         """
         for record in self:
             record.image_feature_url = f"/rifas/image_feature/{record.id}"
@@ -148,8 +227,16 @@ class Rifa(models.Model):
     @api.depends("description")
     def _compute_description_short(self):
         """
-        This method computes a short description for the raffle.
-        It limits the description to 100 characters.
+        Compute a shortened version of the raffle description.
+        
+        Creates a truncated plain text version of the HTML description
+        suitable for display in lists or previews. Removes HTML tags
+        and limits to 140 characters with ellipsis if longer.
+        
+        Note:
+            - HTML tags are stripped before truncation
+            - Newlines are replaced with spaces
+            - Adds "..." if description exceeds 100 characters
         """
         for record in self:
             if record.description:
@@ -164,7 +251,14 @@ class Rifa(models.Model):
     @api.depends("ticket_ids")
     def _compute_ticket_sold(self):
         """
-        This method computes the number of tickets sold for the raffle.
+        Compute the number of tickets sold for the raffle.
+        
+        Calculates both the number of sold tickets and remaining available tickets.
+        Ensures that sold count doesn't exceed the maximum ticket limit.
+        
+        Note:
+            - Also updates ticket_available field
+            - Prevents overselling by capping at ticket_max
         """
         for rifa in self:
             rifa.ticket_sold = len(rifa.ticket_ids.ids)
@@ -176,7 +270,14 @@ class Rifa(models.Model):
     @api.depends("ticket_max", "ticket_sold")
     def _compute_ticket_available(self):
         """
-        This method computes the number of tickets available for the raffle.
+        Compute the number of tickets available for purchase.
+        
+        Calculates remaining tickets by subtracting sold tickets from
+        the maximum allowed. Ensures the count never goes negative.
+        
+        Note:
+            - Prevents negative values by setting minimum to 0
+            - Adjusts sold count if it would exceed maximum
         """
         for rifa in self:
             rifa.ticket_available = rifa.ticket_max - rifa.ticket_sold
@@ -186,8 +287,21 @@ class Rifa(models.Model):
 
     def action_publish(self):
         """
-        This method is triggered when the rifa is published.
-        It checks if the rifa has enough tickets and updates the state to 'publish'.
+        Publish the raffle after validating required fields.
+        
+        Performs validation checks to ensure the raffle has all necessary
+        information before making it available for ticket purchases.
+        Changes the state from 'draft' to 'publish'.
+        
+        Returns:
+            bool: True if successfully published
+            
+        Raises:
+            ValidationError: If any required field is missing:
+                - description: Raffle description is required
+                - image_feature: Main image is required  
+                - date_end: End date is required
+                - ticket_max: Maximum ticket count is required
         """
         if not self.description:
             raise ValidationError("La rifa no tiene descripción.")
@@ -200,11 +314,25 @@ class Rifa(models.Model):
         self.state = "publish"
         return True
 
-
     def check_number(self, number: int):
         """
-        This method checks if the provided number is valid for the rifa.
-        Returns True if valid, False otherwise.
+        Validate if a ticket number is available for purchase.
+        
+        Performs comprehensive validation to ensure a ticket number
+        can be assigned to a new ticket purchase.
+        
+        Args:
+            number (int): The ticket number to validate
+            
+        Returns:
+            bool: True if the number is valid and available
+            
+        Raises:
+            ValidationError: For various validation failures:
+                - Raffle is not published
+                - Number exceeds maximum ticket count
+                - Number is already assigned to another ticket
+                - Number is zero or negative
         """
         if self.state != "publish":
             raise ValidationError("La rifa no está publicada.")

@@ -1,7 +1,21 @@
+# -*- coding: utf-8 -*-
+"""
+Client Management Model for Rifas Module.
+
+This module handles customer/client management for the raffle system,
+including client registration, partner integration, and sales tracking.
+"""
 from odoo import models, fields, api
 
 
 class RifaClient(models.Model):
+    """
+    Model representing clients/customers in the raffle system.
+    
+    This model manages customer information, integrates with Odoo's partner
+    system, and tracks customer activity including sales orders and purchases.
+    It implements a unique email constraint to prevent duplicate customers.
+    """
     _name = "rifas.client"
     _description = "Cliente de Rifa"
 
@@ -27,10 +41,36 @@ class RifaClient(models.Model):
 
     @api.depends("sale_order_ids")
     def _compute_sale_order_count(self):
+        """
+        Calculate the total number of sale orders for this client.
+        
+        Computes the count of sale orders associated with this client
+        for display in views and reports.
+        
+        Note:
+            This is a computed field that updates automatically when orders change
+        """
         for record in self:
             record.sale_order_count = len(record.sale_order_ids)
 
     def create(self, vals_list):
+        """
+        Create a new client or update existing one if email already exists.
+        
+        Implements a unique email constraint by checking for existing clients
+        with the same email. If found, updates the existing record instead
+        of creating a duplicate. Also automatically creates a corresponding
+        res.partner record for Odoo integration.
+        
+        Args:
+            vals_list (dict): Dictionary containing field values for the new client
+            
+        Returns:
+            RifaClient: Created or updated client instance
+            
+        Note:
+            Automatically creates a res.partner record for integration with other Odoo modules
+        """
         val_email = vals_list.get("email")
         existing_client = self.search([("email", "=", val_email)], limit=1)
         if existing_client:
@@ -47,6 +87,15 @@ class RifaClient(models.Model):
         return super(RifaClient, self).create(vals_list)
 
     def action_view_sales(self):
+        """
+        Open a view showing all sale orders for this client.
+        
+        Provides navigation from client record to their associated sale orders
+        for detailed purchase history and order management.
+        
+        Returns:
+            dict: Action dictionary to open filtered sale orders list view
+        """
         self.ensure_one()
         return {
             "name": "Órdenes de Venta",

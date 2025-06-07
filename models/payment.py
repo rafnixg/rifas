@@ -1,8 +1,22 @@
+# -*- coding: utf-8 -*-
+"""
+Payment Management Models for Rifas Module.
+
+This module handles payment processing for raffle ticket purchases, including
+payment method management, payment validation, approval workflows, and
+customer notification systems.
+"""
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
 
 class PaymentMethod(models.Model):
+    """
+    Model representing available payment methods for raffle purchases.
+    
+    This model manages the different payment options available to customers,
+    including their visual representation and activation status.
+    """
     _name = "rifas.payment_method"
     _description = "Método de Pago"
 
@@ -16,11 +30,16 @@ class PaymentMethod(models.Model):
     )
     is_active = fields.Boolean(default=True)
 
-
     @api.depends("image")
     def _compute_logo_url(self):
         """
-        This method computes the URL for the logo image.
+        Generate URL for the payment method logo image.
+        
+        Creates a web-accessible URL for the payment method's logo image
+        when an image is uploaded. Used for display in web interfaces.
+        
+        Note:
+            URL is only generated if an image is present
         """
         for record in self:
             if record.image:
@@ -29,8 +48,14 @@ class PaymentMethod(models.Model):
                 record.logo_url = False
 
 
-
 class Payment(models.Model):
+    """
+    Model representing payments made for raffle ticket purchases.
+    
+    This model manages the complete payment lifecycle from submission
+    to approval, including validation, state management, and customer
+    communication throughout the payment process.
+    """
     _name = "rifas.payment"
     _description = "Pago"
     _order = "date desc"
@@ -67,6 +92,18 @@ class Payment(models.Model):
     sale_order_id = fields.Many2one("rifas.sale_order", string="Orden de Venta")
 
     def create(self, vals_list):
+        """
+        Create a new payment record with automatic sequence assignment.
+        
+        Overrides the default create method to assign a sequential payment number
+        and automatically link the payment to its associated sale order.
+        
+        Args:
+            vals_list (dict): Dictionary containing field values for the new payment
+            
+        Returns:
+            Payment: Created payment instance with automatic sequence number
+        """
         if vals_list.get("name", ("New")) == ("New"):
             vals_list["name"] = self.env["ir.sequence"].next_by_code(
                 "rifas.payment"
@@ -77,8 +114,13 @@ class Payment(models.Model):
 
     def action_review(self):
         """
-        This method is triggered when the payment is reviewed.
-        It updates the state of the payment and the associated sale order.
+        Set payment status to review and update related records.
+        
+        Changes the payment state to 'review' and cascades this state
+        to the associated sale order and its tickets for consistency.
+        
+        Returns:
+            bool: True if the review action was successful
         """
         self.state = "review"
         self.sale_order_id.state = "review"
@@ -87,8 +129,17 @@ class Payment(models.Model):
 
     def action_approve(self):
         """
-        This method is triggered when the payment is approved.
-        It updates the state of the payment and the associated sale order.
+        Approve payment after validation and update all related records.
+        
+        Validates that payment amount matches sale order total, then approves
+        the payment and cascades approval to sale order and tickets. Sends
+        confirmation email to customer upon successful approval.
+        
+        Returns:
+            bool: True if approval was successful
+            
+        Raises:
+            ValidationError: If payment amount doesn't match order total
         """
         amount = self.sale_order_id.amount
         if self.amount != amount:
@@ -105,7 +156,14 @@ class Payment(models.Model):
 
     def _send_email_approved(self):
         """
-        This method sends an email to the client when the payment is approved.
+        Send payment approval notification email to customer.
+        
+        Uses the predefined email template to notify the customer that
+        their payment has been approved. Logs any errors during email
+        sending without interrupting the approval process.
+        
+        Note:
+            Email errors are logged but do not prevent payment approval
         """
         template = self.env.ref("rifas.email_template_payment_approved")
         if template:
@@ -132,8 +190,13 @@ class Payment(models.Model):
 
     def action_cancel(self):
         """
-        This method is triggered when the payment is canceled.
-        It updates the state of the payment and the associated sale order.
+        Cancel payment and cascade cancellation to related records.
+        
+        Sets the payment state to 'cancel' and updates the associated
+        sale order to maintain data consistency across related records.
+        
+        Returns:
+            bool: True if cancellation was successful
         """
         self.state = "cancel"
         self.sale_order_id.state = "cancel"
@@ -141,8 +204,13 @@ class Payment(models.Model):
 
     def action_sale_order(self):
         """
-        This method is triggered when the user clicks on the sale order button.
-        It opens the sale order associated with the payment.
+        Open the associated sale order in form view.
+        
+        Provides navigation from payment record to its related sale order
+        for detailed order information and management.
+        
+        Returns:
+            dict: Action dictionary to open sale order form view
         """
         return {
             "type": "ir.actions.act_window",

@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Sale Order Model for Rifas Module.
+
+This module handles the sale order management for raffle ticket purchases,
+including order validation, payment tracking, and customer communication.
+"""
 import hashlib
 
 from odoo import models, fields, api
@@ -7,7 +14,16 @@ STATE_SALE_ORDER = [
     ("done", "Completado"),
     ("cancel", "Cancelado"),
 ]
+
+
 class SaleOrder(models.Model):
+    """
+    Model representing sale orders for raffle ticket purchases.
+    
+    This model manages the complete sales process from order creation
+    to completion, including ticket assignment, payment tracking,
+    and customer validation through email confirmation.
+    """
     _name = "rifas.sale_order"
     _description = "Orden de Venta"
     _order = "create_date desc"
@@ -40,10 +56,19 @@ class SaleOrder(models.Model):
     ticket_count = fields.Integer(
         string="Cantidad de Boletos", compute="_compute_ticket_count", store=True
     )
+
     def _generate_valitadtion_code(self):
         """
-        This method generates a validation code for the sale order.
-        The code is a combination of the sale order ID and the current date.
+        Generate a unique validation code for the sale order.
+        
+        Creates an 8-character validation code using MD5 hash of the order ID
+        and current timestamp. Ensures uniqueness by regenerating if code already exists.
+        
+        Returns:
+            str: 8-character unique validation code
+            
+        Note:
+            Recursively regenerates if duplicate code is found
         """
         code = hashlib.md5(
             (str(self.id) + fields.Datetime.now().strftime("%Y%m%d%H%M%S")).encode()
@@ -57,7 +82,16 @@ class SaleOrder(models.Model):
 
     def _check_amount(self):
         """
-        This method checks if the amount of the sale order is equal to the sum of the ticket prices.
+        Validate that the order amount matches the sum of ticket prices.
+        
+        Ensures data integrity by verifying that the total order amount
+        equals the sum of all associated ticket prices.
+        
+        Raises:
+            ValueError: If the amount doesn't match the sum of ticket prices
+            
+        Note:
+            Should be called before finalizing an order
         """
         total = 0
         for ticket in self.ticket_ids:
@@ -69,7 +103,19 @@ class SaleOrder(models.Model):
 
     def create(self, vals_list):
         """
-        Override the create method to set the name and check the state of the rifa.
+        Create a new sale order with validation and automatic field assignment.
+        
+        Overrides the default create method to validate raffle state, set order name
+        using sequence, generate validation code, and perform amount validation.
+        
+        Args:
+            vals_list (dict): Dictionary containing field values for the new record
+            
+        Returns:
+            SaleOrder: Created sale order instance
+            
+        Raises:
+            ValueError: If raffle is not published or amount validation fails
         """
         if vals_list.get("rifa_id"):
             rifa = self.env["rifas.raffle"].browse(vals_list["rifa_id"])
@@ -89,8 +135,13 @@ class SaleOrder(models.Model):
     @api.onchange("state")
     def _onchange_state(self):
         """
-        This method is triggered when the state of the sale order changes.
-        It updates the state of the associated tickets.
+        Handle state changes and update associated tickets accordingly.
+        
+        Triggered when the sale order state changes. When the order is marked
+        as 'done', all associated tickets are also marked as 'done'.
+        
+        Note:
+            This ensures data consistency between orders and tickets
         """
         if self.state == "done":
             self.ticket_ids.write({"state": "done"})
@@ -98,7 +149,13 @@ class SaleOrder(models.Model):
     @api.depends("ticket_ids")
     def _compute_amount(self):
         """
-        This method computes the total amount of the sale order based on the selected tickets.
+        Calculate the total amount based on associated ticket prices.
+        
+        Computes the total order amount by summing up the prices of all
+        tickets associated with this sale order.
+        
+        Note:
+            This is a computed field that automatically updates when tickets change
         """
         for order in self:
             total = 0
@@ -109,15 +166,29 @@ class SaleOrder(models.Model):
     @api.depends("ticket_ids")
     def _compute_ticket_count(self):
         """
-        This method computes the number of tickets associated with the sale order.
+        Calculate the number of tickets associated with the sale order.
+        
+        Computes the total count of tickets linked to this sale order
+        for display and reporting purposes.
+        
+        Note:
+            This is a computed field that automatically updates when tickets change
         """
         for order in self:
             order.ticket_count = len(order.ticket_ids)
 
     def action_cancel(self):
         """
-        This method is triggered when the sale order is canceled.
-        It updates the state of the associated tickets and the sale order itself.
+        Cancel the sale order and update associated tickets.
+        
+        Sets the sale order state to 'cancel'. Associated tickets remain
+        in the system but are no longer active for this order.
+        
+        Returns:
+            bool: True if cancellation was successful
+            
+        Note:
+            Tickets are not deleted, only the order state changes
         """
         self.state = "cancel"
         # self.ticket_ids.unlink()
