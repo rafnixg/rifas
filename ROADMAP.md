@@ -1,20 +1,69 @@
-# Roadmap del Módulo Rifas
+# 🗺️ Roadmap del Módulo Rifas
 
-## Funcionalidades Existentes
-- **Gestión de Rifas**: Creación, edición y eliminación de rifas.
-- **Asignación de Números**: Generación y asignación automática de números para los participantes.
-- **Control de Participantes**: Registro y seguimiento de los participantes en cada rifa.
-- **Sorteo Automático**: Selección aleatoria de ganadores.
-- **Historial de Rifas**: Visualización de rifas pasadas y sus resultados.
+## 📊 Estado Actual del Proyecto
 
-## Funcionalidades Faltantes
-- **Notificaciones**: Envío de notificaciones por correo o SMS a los participantes.
-- **Integración con Pagos**: Implementación de métodos de pago para la compra de números.
-- **Reportes**: Generación de reportes detallados de rifas y participantes.
-- **Soporte Multilingüe**: Traducción del módulo a varios idiomas.
-- **Interfaz Mejorada**: Optimización de la experiencia de usuario en la interfaz.
+### Versión Actual: 18.0.2.1.0
 
-## Próximos Pasos
-1. Priorizar la implementación de notificaciones.
-2. Diseñar la integración con métodos de pago.
-3. Recopilar feedback de usuarios para nuevas funcionalidades.
+El módulo se encuentra en una fase de **madurez funcional** con las características principales implementadas y probadas en entornos de producción.
+
+---
+
+## ✅ Funcionalidades Implementadas
+
+### 🎯 Core Features (Completado)
+- [x] **Gestión Completa de Rifas**
+  - Creación, edición y eliminación de rifas
+  - Estados de rifa (borrador, activa, finalizada)
+  - Configuración de fechas y parámetros
+  
+- [x] **Sistema de Boletos**
+  - Generación automática de números únicos
+  - Asignación manual y automática
+  - Validación de boletos
+  
+- [x] **Gestión de Participantes**
+  - Registro completo de clientes
+  - Historial de participaciones
+  - Datos de contacto y seguimiento
+  
+- [x] **Sistema de Pagos**
+  - Integración con Pagos
+  - Control de transacciones
+  - Estados de pago y confirmación
+  
+- [x] **Sorteo y Ganadores**
+  - Registro de ganadores y premios
+
+
+### 🌐 Portal Web (Completado)
+- [x] **Interfaz Pública**
+  - Portal de venta de boletos online
+  - Diseño responsive
+  - Proceso de checkout integrado
+  
+- [x] **Experiencia de Usuario**
+  - Validación de boletos por código
+  - Confirmación automática por email
+  - Estado en tiempo real de rifas
+
+### 📊 Reportes y Análisis (Completado)
+- [x] **Reportes Básicos**
+  - Ventas por rifa
+  - Participantes activos
+  - Histórico de ganadores
+  
+- [x] **Notificaciones**
+  - Templates de email personalizables
+  - Notificaciones automáticas
+  - Confirmaciones de pago
+
+---
+
+## 🚧 En Desarrollo Activo
+
+### Última Actualización
+Este roadmap fue actualizado el **7 de Junio de 2025** y se revisa mensualmente.
+
+---
+
+*🌟 ¿Te gusta hacia dónde va el proyecto? ¡Dale una estrella en GitHub y únete a nuestra comunidad!*
